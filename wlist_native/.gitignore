@@ -6,9 +6,5 @@
 !/Cargo.toml
 
 ### Project ###
-!/src
-/src/frb_generated.rs
-!/.run
-
-!/wlist_native
 !/README.md
+!/src
