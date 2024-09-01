@@ -15,10 +15,12 @@ pub(crate) mod utils {
         unsafe { String::from_utf8_unchecked(key) }
     }
 
+    #[allow(dead_code)] // TODO
     pub async fn random_id_and_put<V: Send + Sync + 'static>(map: &'static DashMap<Arc<String>, V>, value: V) -> Result<Arc<String>, JoinError> {
         spawn_blocking(move || random_id_and_put_sync(map, value)).await
     }
 
+    #[allow(dead_code)]
     pub fn random_id_and_put_sync<V>(map: &DashMap<Arc<String>, V>, value: V) -> Arc<String> {
         loop {
             let id = Arc::new(generate_string(32));

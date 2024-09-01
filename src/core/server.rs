@@ -14,7 +14,7 @@ impl WlistServer {
     }
 
     pub async fn start(_addr: impl ToSocketAddrs) -> Result<Self> {
-        unimplemented!("WlistServer is not implemented in mock.")
+        Err(anyhow::anyhow!("WlistServer is not implemented in mock."))
     }
 
     pub async fn stop(self) -> Result<()> {
@@ -31,7 +31,7 @@ pub mod users {
 
     static PASSWORD: Lazy<RwLock<String>> = Lazy::new(|| RwLock::new(generate_string(8)));
 
-    pub async fn login(username: &str, password: &str) -> Result<bool> {
+    pub(crate) async fn login(username: &str, password: &str) -> Result<bool> {
         if username != "admin" { return Ok(false); }
         Ok(*PASSWORD.read().await == password)
     }

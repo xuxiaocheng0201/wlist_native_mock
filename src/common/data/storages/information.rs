@@ -18,10 +18,7 @@ pub struct StorageInformation {
 }
 
 impl StorageInformation {
-    // TODO: delete?
     /// The default id is `-1`.
-    ///
-    /// You should get the real id by calling `database.add`.
     pub fn new(name: Arc<String>, storage_type: StorageType, root_directory_id: i64) -> Self {
         Self {
             id: -1,

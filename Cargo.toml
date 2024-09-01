@@ -25,9 +25,11 @@ rusqlite_regex = "~0.2"
 
 # core
 bytes = "^1.7"
+either = "^1.13"
 ## helper
 rand = "~0.8"
 faster-hex = "~0.9"
 sha2 = "~0.10"
 md-5 = "~0.10"
 ## client
+validators = { version = "~0.25", default-features = false, features = ["std", "phone"] }
