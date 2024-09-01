@@ -10,6 +10,7 @@ once_cell = "^1.19"
 serde = { version = "^1.0", features = ["derive", "rc"] }
 tokio = { version = "^1.40", features = ["sync", "rt-multi-thread", "macros"] }
 thiserror = "^1.0"
+dashmap = "^6.0"
 ## data
 derive_more = { version = "^1.0", features = ["constructor", "display", "deref", "deref_mut"] }
 chrono = { version = "~0.4", features = ["serde"] }
@@ -22,5 +23,11 @@ rusqlite = { version = "~0.32", features = ["chrono", "bundled"] }
 libsimple = "~0.3"
 rusqlite_regex = "~0.2"
 
-# web
-dashmap = "^6.0"
+# core
+bytes = "^1.7"
+## helper
+rand = "~0.8"
+faster-hex = "~0.9"
+sha2 = "~0.10"
+md-5 = "~0.10"
+## client
