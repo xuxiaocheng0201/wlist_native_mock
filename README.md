@@ -17,4 +17,13 @@ enable_lifetime: true
 ```
 6. 新建在 `dart_output` 中配置的文件夹
 7. 删除 rust 文件夹，使用 submodule: `git submodule add https://github.com/wlist_org/wlist_native_mock rust`
-8. 生成代码：`flutter_rust_bridge_codegen generate`
+8. 在项目 `pubspec.yaml` 相应段中添加
+```yaml
+dependencies:
+  flutter_rust_bridge: 2.3.0
+  freezed_annotation: ^2.4.4
+dev_dependencies:
+  freezed: ^2.5.2
+  build_runner: ^2.4.11
+```
+9. 生成代码：`flutter_rust_bridge_codegen generate`
