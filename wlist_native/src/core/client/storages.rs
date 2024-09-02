@@ -1,7 +1,9 @@
 use std::sync::atomic::{AtomicI64, Ordering};
 use std::sync::Arc;
 
+use anyhow::Result;
 use chrono::Utc;
+use dashmap::mapref::one::Ref;
 use dashmap::DashMap;
 use derive_more::Constructor;
 use hashbrown::HashMap;
@@ -14,9 +16,14 @@ use crate::common::data::storages::options::{FilterFlags, ListStorageOptions};
 use crate::common::data::storages::StorageType;
 use crate::common::exceptions::{IncorrectArgumentError, InvalidStorageConfigError, StorageNotFoundError, StorageTypeMismatchedError};
 use crate::core::client::context::define_func;
+use crate::core::storages::lanzou::LanzouStorage;
 
 static ATOMIC_ID: AtomicI64 = AtomicI64::new(1);
-static STORAGES: Lazy<DashMap<i64, (LanzouConfigurationInner, StorageInformation)>> = Lazy::new(DashMap::new);
+static STORAGES: Lazy<DashMap<i64, (LanzouConfigurationInner, StorageInformation, LanzouStorage)>> = Lazy::new(DashMap::new);
+
+pub(crate) fn get_storage(id: i64) -> Result<Ref<i64, (LanzouConfigurationInner, StorageInformation, LanzouStorage)>> {
+    STORAGES.get(&id).ok_or(StorageNotFoundError.into())
+}
 
 define_func!(storages_list(login_context, options: ListStorageOptions) -> StorageListInformation = {
     let iter = STORAGES.iter()
@@ -122,7 +129,8 @@ define_func!(storages_lanzou_add(login_context, name: String, config: LanzouConf
         update_time: Utc::now(),
         root_directory_id: config.root_directory_id,
     };
-    STORAGES.insert(id, (config, info.clone()));
+    let storage = LanzouStorage::new(config.root_directory_id);
+    STORAGES.insert(id, (config, info.clone(), storage));
     Ok(info)
 });
 define_func!(storages_lanzou_update(login_context, id: i64, config: LanzouConfigurationInner) -> () = {
