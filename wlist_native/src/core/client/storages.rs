@@ -1,6 +1,8 @@
+use std::sync::atomic::{AtomicI64, Ordering};
 use std::sync::Arc;
 
-use chrono::{DateTime, Utc};
+use chrono::Utc;
+use dashmap::DashMap;
 use derive_more::Constructor;
 use hashbrown::HashMap;
 use once_cell::sync::Lazy;
@@ -10,50 +12,46 @@ use validators::phonenumber::country::Id;
 use crate::common::data::storages::information::{StorageDetailsInformation, StorageInformation, StorageListInformation};
 use crate::common::data::storages::options::{FilterFlags, ListStorageOptions};
 use crate::common::data::storages::StorageType;
-use crate::common::exceptions::{IncorrectArgumentError, InvalidStorageConfigError, StorageNotFoundError};
+use crate::common::exceptions::{IncorrectArgumentError, InvalidStorageConfigError, StorageNotFoundError, StorageTypeMismatchedError};
 use crate::core::client::context::define_func;
 
-static NOW: Lazy<DateTime<Utc>> = Lazy::new(Utc::now);
+static ATOMIC_ID: AtomicI64 = AtomicI64::new(1);
+static STORAGES: Lazy<DashMap<i64, (LanzouConfigurationInner, StorageInformation)>> = Lazy::new(DashMap::new);
 
-// TODO: implement
-
-define_func!(storages_list(login_context, options: ListStorageOptions) ->StorageListInformation = {
-    let storage = StorageInformation {
-        id: 1,
-        name: Arc::new("tester".to_string()),
-        read_only: false,
-        storage_type: StorageType::Lanzou,
-        available: true,
-        create_time: *NOW,
-        update_time: *NOW,
-        root_directory_id: -1,
-    };
-    if options.filter.flags().contains(FilterFlags::Writable) {
-        Ok(StorageListInformation {
-            total: 1,
-            filtered: 1,
-            storages: if options.offset == 0 && options.limit > 0 { vec![storage] } else { vec![] },
-        })
-    } else {
-        Ok(StorageListInformation {
-            total: 1,
-            filtered: 0,
-            storages: vec![],
-        })
-    }
+define_func!(storages_list(login_context, options: ListStorageOptions) -> StorageListInformation = {
+    let iter = STORAGES.iter()
+        .map(|entry| entry.value().1.clone());
+    let total = iter.clone().count() as u64;
+    let iter = iter.filter(|s| {
+        let flag = options.filter.flags();
+        if !flag.contains(FilterFlags::Shared) {
+            if s.storage_type.is_share() {
+                return false;
+            }
+        }
+        if !flag.contains(FilterFlags::Writable) {
+            if s.storage_type.is_private() && !s.read_only {
+                return false;
+            }
+        }
+        if !flag.contains(FilterFlags::ReadonlyPrivate) {
+            if s.storage_type.is_private() && s.read_only {
+                return false;
+            }
+        }
+        true
+    });
+    let filtered = iter.clone().count() as u64;
+    let storages = iter.skip(options.offset as usize)
+        .take(options.limit as usize)
+        .collect::<Vec<_>>();
+    Ok(StorageListInformation {
+        total, filtered, storages,
+    })
 });
 define_func!(storages_get(login_context, id: i64, _check: bool) -> StorageDetailsInformation = {
-    if id != 1 { return Err(StorageNotFoundError.into()); }
-    let storage = StorageInformation {
-        id: 1,
-        name: Arc::new("tester".to_string()),
-        read_only: false,
-        storage_type: StorageType::Lanzou,
-        available: true,
-        create_time: *NOW,
-        update_time: *NOW,
-        root_directory_id: -1,
-    };
+    let storage = STORAGES.get(&id).ok_or(StorageNotFoundError)?.1.clone();
+    // TODO: mock more detail implement.
     Ok(StorageDetailsInformation {
         basic: storage,
         size: Some(130),
@@ -65,16 +63,23 @@ define_func!(storages_get(login_context, id: i64, _check: bool) -> StorageDetail
     })
 });
 define_func!(storages_remove(login_context, id: i64) -> () = {
-    if id != 1 { return Err(StorageNotFoundError.into()); }
-    unimplemented!()
+    STORAGES.remove(&id).ok_or(StorageNotFoundError)?;
+    Ok(())
 });
-define_func!(storages_rename(login_context, id: i64, _name: String) -> () = {
-    if id != 1 { return Err(StorageNotFoundError.into()); }
-    unimplemented!()
+define_func!(storages_rename(login_context, id: i64, name: String) -> () = {
+    if name.len() < 1 { return Err(IncorrectArgumentError::new("storage name is empty".into()).into()); }
+    if name.len() > 32767 { return Err(IncorrectArgumentError::new("storage name is too long".into()).into()); }
+    let mut entry = STORAGES.get_mut(&id).ok_or(StorageNotFoundError)?;
+    entry.1.name = Arc::new(name);
+    Ok(())
 });
-define_func!(storages_set_readonly(login_context, id: i64, _readonly: bool) -> () = {
-    if id != 1 { return Err(StorageNotFoundError.into()); }
-    unimplemented!()
+define_func!(storages_set_readonly(login_context, id: i64, readonly: bool) -> () = {
+    let mut entry = STORAGES.get_mut(&id).ok_or(StorageNotFoundError)?;
+    if !readonly && entry.1.storage_type.is_share() {
+        return Err(StorageTypeMismatchedError.into());
+    }
+    entry.1.read_only = readonly;
+    Ok(())
 });
 
 
@@ -107,12 +112,27 @@ define_func!(storages_lanzou_add(login_context, name: String, config: LanzouConf
     config.check()?;
     if name.len() < 1 { return Err(IncorrectArgumentError::new("storage name is empty".into()).into()); }
     if name.len() > 32767 { return Err(IncorrectArgumentError::new("storage name is too long".into()).into()); }
-    unimplemented!()
+    let id = ATOMIC_ID.fetch_add(1, Ordering::SeqCst);
+    let info = StorageInformation {
+        id, name: Arc::new(name),
+        read_only: false,
+        storage_type: StorageType::Lanzou,
+        available: true,
+        create_time: Utc::now(),
+        update_time: Utc::now(),
+        root_directory_id: config.root_directory_id,
+    };
+    STORAGES.insert(id, (config, info.clone()));
+    Ok(info)
 });
 define_func!(storages_lanzou_update(login_context, id: i64, config: LanzouConfigurationInner) -> () = {
     config.check()?;
-    if id != 1 { return Err(StorageNotFoundError.into()); }
-    unimplemented!()
+    let mut storage = STORAGES.get_mut(&id).ok_or(StorageNotFoundError)?;
+    if storage.1.storage_type != StorageType::Lanzou {
+        return Err(StorageTypeMismatchedError.into());
+    }
+    storage.0 = config;
+    Ok(())
 });
 define_func!(storages_lanzou_chcek(_context, config: LanzouConfigurationInner) -> () = {
     config.check().map_err(Into::into)
