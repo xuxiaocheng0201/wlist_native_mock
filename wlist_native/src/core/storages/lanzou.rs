@@ -4,6 +4,7 @@ use dashmap::DashMap;
 
 use crate::core::storages::Node;
 
+#[derive(Clone)]
 pub struct LanzouStorage {
     pub map: Arc<DashMap<i64, Node>>,
     pub root: Node,

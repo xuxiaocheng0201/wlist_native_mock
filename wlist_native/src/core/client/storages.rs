@@ -21,7 +21,7 @@ use crate::core::storages::lanzou::LanzouStorage;
 static ATOMIC_ID: AtomicI64 = AtomicI64::new(1);
 static STORAGES: Lazy<DashMap<i64, (LanzouConfigurationInner, StorageInformation, LanzouStorage)>> = Lazy::new(DashMap::new);
 
-pub(crate) fn get_storage(id: i64) -> Result<Ref<i64, (LanzouConfigurationInner, StorageInformation, LanzouStorage)>> {
+pub(crate) fn get_storage(id: i64) -> Result<Ref<'static, i64, (LanzouConfigurationInner, StorageInformation, LanzouStorage)>> {
     STORAGES.get(&id).ok_or(StorageNotFoundError.into())
 }
 

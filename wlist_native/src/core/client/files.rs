@@ -1,5 +1,5 @@
 use either::Either;
-use md5::digest::typenum::op;
+
 use crate::common::data::files::confirmations::RefreshConfirmation;
 use crate::common::data::files::FileLocation;
 use crate::common::data::files::information::{FileDetailsInformation, FileInformation, FileListInformation};
@@ -9,7 +9,7 @@ use crate::core::client::context::define_func;
 use crate::core::client::storages::get_storage;
 
 define_func!(files_list(login_context, directory: FileLocation, options: ListFileOptions) -> Either<FileListInformation, RefreshConfirmation> = {
-    if !directory.is_directory { return(Err(IncorrectArgumentError::new("listing children in file".into()).into())); }
+    if !directory.is_directory { return Err(IncorrectArgumentError::new("listing children in file".into()).into()); }
     let storage = get_storage(directory.storage)?;
     let directory = storage.2.map.get(&directory.file_id).ok_or(FileNotFoundError::new(directory))?;
     let iter = directory.children().iter();
@@ -20,12 +20,12 @@ define_func!(files_list(login_context, directory: FileLocation, options: ListFil
             FilesFilter::OnlyFiles => !s.info.is_directory,
             FilesFilter::Both => true,
         }
-    })
+    });
     let filtered = iter.clone().count() as u64;
     let files = iter
-        .offset(options.offset as usize)
+        .skip(options.offset as usize)
         .take(options.limit as usize)
-        .map(|node| node.datail(None))
+        .map(|node| node.info.clone())
         .collect::<Vec<_>>();
     let list = FileListInformation { total, filtered, files, };
     // TODO: Mock refresh confirmation.
