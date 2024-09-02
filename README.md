@@ -16,7 +16,7 @@ dart_output: lib/generated/rust
 enable_lifetime: true
 ```
 6. 新建在 `dart_output` 中配置的文件夹
-7. 删除 rust 文件夹，使用 submodule: `git submodule add https://github.com/wlist_org/wlist_native_mock rust`
+7. 删除 rust 文件夹，使用 submodule: `git submodule add https://github.com/wlist-org/wlist_native_mock rust`
 8. 在项目 `pubspec.yaml` 相应段中添加
 ```yaml
 dependencies:
