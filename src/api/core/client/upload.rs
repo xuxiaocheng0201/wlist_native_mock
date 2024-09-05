@@ -83,19 +83,23 @@ mod internal {
 ///
 /// buffer: a pointer to the buffer to read the data.
 ///
-/// transferred_bytes: An iterator that will be notified when the transferred bytes changed.
 /// The returned value is the total uploaded bytes of current buffer. (0 <= value < buffer_size)
-pub async fn upload_stream(client: Option<WlistClientManager>, token: FUploadToken, id: u64, buffer: ConstU8, buffer_size: usize, transferred_bytes: StreamSink<usize>, control: PauseController) -> Result<(), UniverseError> {
+/// Returning null or error means the upload is finished.
+pub async fn upload_stream(client: Option<WlistClientManager>, token: FUploadToken, id: u64, buffer: ConstU8, buffer_size: usize, transferred_bytes: StreamSink<Option<usize>>, control: PauseController) {
     let mut buffer = unsafe { wlist_native::core::helper::buffer::new_read_buffer(buffer.0, buffer_size) };
     let (tx, mut rx) = tokio::sync::watch::channel(0);
-    tokio::select! {
-        _ = internal::upload_stream(client, token, id, &mut buffer, tx, control.sender.subscribe()) => Ok(()),
+    let r = tokio::select! {
+        r = internal::upload_stream(client, token, id, &mut buffer, tx, control.sender.subscribe()) => r,
         _ = async { loop {
             if rx.changed().await.is_ok() {
-                let _ = transferred_bytes.add(*rx.borrow_and_update());
+                let _ = transferred_bytes.add(Some(*rx.borrow_and_update()));
             }
         } } => unreachable!()
-    }
+    };
+    match r {
+        Ok(()) => transferred_bytes.add(None),
+        Err(error) => transferred_bytes.add_error(error),
+    }.expect("failed to send result to flutter")
 }
 
 

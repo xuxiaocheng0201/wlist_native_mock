@@ -100,18 +100,16 @@ pub mod buffer {
         Vec::from_raw_parts(ptr as _, cap, cap).into()
     }
 
+    #[inline]
+    pub unsafe fn new_write_buffer(ptr: *mut u8, cap: usize) -> WriteBuffer {
+        debug_assert!(!ptr.is_null(), "ptr is null");
+        WriteBuffer { ptr, len: 0, cap, }
+    }
+
     pub struct WriteBuffer {
         ptr: *mut u8,
         len: usize,
         cap: usize,
-    }
-
-    impl WriteBuffer {
-        #[inline]
-        pub unsafe fn new(ptr: *mut u8, cap: usize) -> Self {
-            debug_assert!(!ptr.is_null(), "ptr is null");
-            Self { ptr, len: 0, cap, }
-        }
     }
 
     unsafe impl BufMut for WriteBuffer {
