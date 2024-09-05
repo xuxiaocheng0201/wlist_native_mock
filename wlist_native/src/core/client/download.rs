@@ -1,5 +1,5 @@
 use bytes::BufMut;
-use tokio::sync::watch::Receiver;
+use tokio::sync::watch::{Receiver, Sender};
 
 use crate::common::data::files::confirmations::DownloadConfirmation;
 use crate::common::data::files::FileLocation;
@@ -16,7 +16,7 @@ define_func!(download_cancel(login_context, token: DownloadToken) -> () = {
 define_func!(download_confirm(login_context, token: DownloadToken) -> DownloadInformation = {
     unimplemented!()
 });
-define_func!(download_stream(login_context, token: DownloadToken, id: u64, start: u64, buffer: &mut impl BufMut, control: Receiver<bool>) -> () = {
+define_func!(download_stream(login_context, token: DownloadToken, id: u64, start: u64, buffer: &mut impl BufMut, transferred_bytes: Sender<usize>, control: Receiver<bool>) -> () = {
     unimplemented!()
 });
 define_func!(download_finish(login_context, token: DownloadToken) -> () = {

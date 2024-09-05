@@ -6,6 +6,7 @@ use crate::api::common::data::files::information::FDownloadInformation;
 use crate::api::common::data::files::tokens::FDownloadToken;
 use crate::api::common::exceptions::UniverseError;
 use crate::api::core::client::{define_func, PauseController, WlistClientManager};
+use crate::frb_generated::StreamSink;
 
 define_func!(
     /// Request to download the file.
@@ -42,10 +43,10 @@ define_func!(
 /// flutter_rust_bridge:ignore
 mod internal {
     use bytes::BufMut;
-    use tokio::sync::watch::Receiver;
+    use tokio::sync::watch::{Receiver, Sender};
     use super::*;
 
-    define_func!(download_stream(token: FDownloadToken, id: u64, start: u64, buffer: &mut impl BufMut, control: Receiver<bool>) -> () = wlist_native::core::client::download::download_stream);
+    define_func!(download_stream(token: FDownloadToken, id: u64, start: u64, buffer: &mut impl BufMut, transferred_bytes: Sender<usize>, control: Receiver<bool>) -> () = wlist_native::core::client::download::download_stream);
 }
 
 /// Download the file chunk.
@@ -56,9 +57,17 @@ mod internal {
 /// start: the start position to download of this chunk. (0 <= start <= chunk_size)
 ///
 /// buffer: a pointer to the buffer to write the data.
-pub async fn download_stream(client: Option<WlistClientManager>, token: FDownloadToken, id: u64, start: u64, buffer: MutU8, buffer_size: usize, control: PauseController) -> Result<(), UniverseError> {
+pub async fn download_stream(client: Option<WlistClientManager>, token: FDownloadToken, id: u64, start: u64, buffer: MutU8, buffer_size: usize, transferred_bytes: StreamSink<usize>, control: PauseController) -> Result<(), UniverseError> {
     let mut buffer = unsafe { wlist_native::core::helper::buffer::WriteBuffer::new(buffer.0, buffer_size) };
-    internal::download_stream(client, token, id, start, &mut buffer, control.sender.subscribe()).await
+    let (tx, mut rx) = tokio::sync::watch::channel(0);
+    tokio::select! {
+        _ = internal::download_stream(client, token, id, start, &mut buffer, tx, control.sender.subscribe()) => Ok(()),
+        _ = async { loop {
+            if rx.changed().await.is_ok() {
+                let _ = transferred_bytes.add(*rx.borrow_and_update());
+            }
+        } } => unreachable!()
+    }
 }
 
 

@@ -1,5 +1,5 @@
 use bytes::Bytes;
-use tokio::sync::watch::Receiver;
+use tokio::sync::watch::{Receiver, Sender};
 
 use crate::common::data::files::confirmations::UploadConfirmation;
 use crate::common::data::files::FileLocation;
@@ -23,7 +23,7 @@ define_func!(upload_cancel(login_context, token: UploadToken) -> () = {
 define_func!(upload_confirm(login_context, token: UploadToken) -> UploadInformation = {
     unimplemented!()
 });
-define_func!(upload_stream(login_context, token: UploadToken, id: u64, buffer: &mut Bytes, control: Receiver<bool>) -> () = {
+define_func!(upload_stream(login_context, token: UploadToken, id: u64, buffer: &mut Bytes, transferred_bytes: Sender<usize>, control: Receiver<bool>) -> () = {
     unimplemented!()
 });
 define_func!(upload_finish(login_context, token: UploadToken) -> FileInformation = {

@@ -7,6 +7,7 @@ use crate::api::common::data::files::options::FDuplicate;
 use crate::api::common::data::files::tokens::FUploadToken;
 use crate::api::common::exceptions::UniverseError;
 use crate::api::core::client::{define_func, PauseController, WlistClientManager};
+use crate::frb_generated::StreamSink;
 
 define_func!(
     /// Check whether the file/directory name is valid.
@@ -69,10 +70,10 @@ define_func!(
 /// flutter_rust_bridge:ignore
 mod internal {
     use bytes::Bytes;
-    use tokio::sync::watch::Receiver;
+    use tokio::sync::watch::{Receiver, Sender};
     use super::*;
 
-    define_func!(upload_stream(token: FUploadToken, id: u64, buffer: &mut Bytes, control: Receiver<bool>) -> () = wlist_native::core::client::upload::upload_stream);
+    define_func!(upload_stream(token: FUploadToken, id: u64, buffer: &mut Bytes, transferred_bytes: Sender<usize>, control: Receiver<bool>) -> () = wlist_native::core::client::upload::upload_stream);
 }
 
 /// Upload the file chunk.
@@ -81,9 +82,17 @@ mod internal {
 /// id: see the `chunks` field in [FUploadInformation]. (0 <= id < chunks_length)
 ///
 /// buffer: a pointer to the buffer to read the data.
-pub async fn upload_stream(client: Option<WlistClientManager>, token: FUploadToken, id: u64, buffer: ConstU8, buffer_size: usize, control: PauseController) -> Result<(), UniverseError> {
+pub async fn upload_stream(client: Option<WlistClientManager>, token: FUploadToken, id: u64, buffer: ConstU8, buffer_size: usize, transferred_bytes: StreamSink<usize>, control: PauseController) -> Result<(), UniverseError> {
     let mut buffer = unsafe { wlist_native::core::helper::buffer::new_read_buffer(buffer.0, buffer_size) };
-    internal::upload_stream(client, token, id, &mut buffer, control.sender.subscribe()).await
+    let (tx, mut rx) = tokio::sync::watch::channel(0);
+    tokio::select! {
+        _ = internal::upload_stream(client, token, id, &mut buffer, tx, control.sender.subscribe()) => Ok(()),
+        _ = async { loop {
+            if rx.changed().await.is_ok() {
+                let _ = transferred_bytes.add(*rx.borrow_and_update());
+            }
+        } } => unreachable!()
+    }
 }
 
 
