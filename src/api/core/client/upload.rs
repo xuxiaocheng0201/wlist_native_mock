@@ -82,6 +82,9 @@ mod internal {
 /// id: see the `chunks` field in [FUploadInformation]. (0 <= id < chunks_length)
 ///
 /// buffer: a pointer to the buffer to read the data.
+///
+/// transferred_bytes: An iterator that will be notified when the transferred bytes changed.
+/// The returned value is the total uploaded bytes of current buffer. (0 <= value < buffer_size)
 pub async fn upload_stream(client: Option<WlistClientManager>, token: FUploadToken, id: u64, buffer: ConstU8, buffer_size: usize, transferred_bytes: StreamSink<usize>, control: PauseController) -> Result<(), UniverseError> {
     let mut buffer = unsafe { wlist_native::core::helper::buffer::new_read_buffer(buffer.0, buffer_size) };
     let (tx, mut rx) = tokio::sync::watch::channel(0);

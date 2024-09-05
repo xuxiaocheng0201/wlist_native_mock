@@ -57,6 +57,9 @@ mod internal {
 /// start: the start position to download of this chunk. (0 <= start <= chunk_size)
 ///
 /// buffer: a pointer to the buffer to write the data.
+///
+/// transferred_bytes: An iterator that will be notified when the transferred bytes changed.
+/// The returned value is the total downloaded bytes of current buffer. (0 <= value < buffer_size)
 pub async fn download_stream(client: Option<WlistClientManager>, token: FDownloadToken, id: u64, start: u64, buffer: MutU8, buffer_size: usize, transferred_bytes: StreamSink<usize>, control: PauseController) -> Result<(), UniverseError> {
     let mut buffer = unsafe { wlist_native::core::helper::buffer::WriteBuffer::new(buffer.0, buffer_size) };
     let (tx, mut rx) = tokio::sync::watch::channel(0);
