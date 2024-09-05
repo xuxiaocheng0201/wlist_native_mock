@@ -33,3 +33,5 @@ sha2 = "~0.10"
 md-5 = "~0.10"
 ## client
 validators = { version = "~0.25", default-features = false, features = ["std", "phone"] }
+## server
+encoding_rs = "~0.8"

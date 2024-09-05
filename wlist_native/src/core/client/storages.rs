@@ -1,18 +1,22 @@
-use std::sync::atomic::{AtomicI64, Ordering};
+use std::cmp::Ordering;
+use std::sync::atomic::AtomicI64;
 use std::sync::Arc;
 
 use anyhow::Result;
+use bytes::Bytes;
 use chrono::Utc;
 use dashmap::mapref::one::Ref;
 use dashmap::DashMap;
 use derive_more::Constructor;
 use hashbrown::HashMap;
+use indexmap::IndexMap;
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use validators::phonenumber::country::Id;
 
+use crate::common::data::Direction;
 use crate::common::data::storages::information::{StorageDetailsInformation, StorageInformation, StorageListInformation};
-use crate::common::data::storages::options::{FilterFlags, ListStorageOptions};
+use crate::common::data::storages::options::{FilterFlags, ListStorageOptions, StoragesOrder};
 use crate::common::data::storages::StorageType;
 use crate::common::exceptions::{IncorrectArgumentError, InvalidStorageConfigError, StorageNotFoundError, StorageTypeMismatchedError};
 use crate::core::client::context::define_func;
@@ -25,11 +29,25 @@ pub(crate) fn get_storage(id: i64) -> Result<Ref<'static, i64, (LanzouConfigurat
     STORAGES.get(&id).ok_or(StorageNotFoundError.into())
 }
 
+pub(crate) async fn get_detail_information(id: i64) -> Result<StorageDetailsInformation> {
+    let storage = get_storage(id)?.1.clone();
+    // TODO: mock more detail implement.
+    Ok(StorageDetailsInformation {
+        basic: storage,
+        size: Some(130),
+        indexed_size: 130,
+        total_size: None,
+        upload_flow: None,
+        download_flow: None,
+        max_size_per_file: 100 << 20,
+    })
+}
+
 define_func!(storages_list(login_context, options: ListStorageOptions) -> StorageListInformation = {
     let iter = STORAGES.iter()
         .map(|entry| entry.value().1.clone());
     let total = iter.clone().count() as u64;
-    let iter = iter.filter(|s| {
+    let vec = iter.filter(|s| {
         let flag = options.filter.flags();
         if !flag.contains(FilterFlags::Shared) {
             if s.storage_type.is_share() {
@@ -47,9 +65,67 @@ define_func!(storages_list(login_context, options: ListStorageOptions) -> Storag
             }
         }
         true
-    });
-    let filtered = iter.clone().count() as u64;
-    let storages = iter.skip(options.offset as usize)
+    }).collect::<Vec<_>>();
+    let filtered = vec.len() as u64;
+    struct Ordered<'a> {
+        order: &'a IndexMap<StoragesOrder, Direction>,
+        encoded_name_cache: once_cell::sync::OnceCell<Bytes>,
+        storage: StorageDetailsInformation,
+    }
+    impl<'a> Ordered<'a> {
+        fn encoded_name(&self) -> &[u8] {
+            self.encoded_name_cache.get_or_init(||
+                encoding_rs::GBK.encode(&self.storage.basic.name).0.into_owned().into()
+            )
+        }
+    }
+    impl<'a> PartialEq<Self> for Ordered<'a> {
+        fn eq(&self, other: &Self) -> bool {
+            self.storage.eq(&other.storage)
+        }
+    }
+    impl<'a> Eq for Ordered<'a> { }
+    impl<'a> PartialOrd<Self> for Ordered<'a> {
+        fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+            let a = &self.storage.basic;
+            let b = &other.storage.basic;
+            for (k, v) in self.order {
+                let order = match k {
+                    StoragesOrder::Id => a.id.cmp(&b.id),
+                    StoragesOrder::Name => self.encoded_name().cmp(&other.encoded_name()),
+                    StoragesOrder::Shared => a.storage_type.is_share().cmp(&b.storage_type.is_share()).reverse(),
+                    StoragesOrder::Readonly => a.read_only.cmp(&b.read_only).reverse(),
+                    StoragesOrder::Size => self.storage.size.cmp(&other.storage.size),
+                    StoragesOrder::IndexedSize => self.storage.indexed_size.cmp(&other.storage.indexed_size),
+                    StoragesOrder::TotalSize => self.storage.total_size.cmp(&other.storage.total_size),
+                    StoragesOrder::SpareSize => self.storage.spare_size().cmp(&other.storage.spare_size()),
+                    StoragesOrder::CreateTime => a.create_time.cmp(&b.create_time),
+                    StoragesOrder::UpdateTime => a.update_time.cmp(&b.update_time),
+                };
+                let order = match v { Direction::ASCEND => order, Direction::DESCEND => order.reverse(), };
+                if order.is_ne() { return Some(order); }
+            }
+            None
+        }
+    }
+    impl<'a> Ord for Ordered<'a> {
+        fn cmp(&self, other: &Self) -> Ordering {
+            self.partial_cmp(other).unwrap_or(Ordering::Equal)
+        }
+    }
+    let mut v = Vec::with_capacity(vec.len());
+    for s in vec {
+        let detail = get_detail_information(s.id).await?;
+        v.push(Ordered {
+            order: &options.orders,
+            encoded_name_cache: Default::default(),
+            storage: detail,
+        });
+    }
+    v.sort_unstable();
+    let storages = v.into_iter()
+        .map(|s| s.storage.basic)
+        .skip(options.offset as usize)
         .take(options.limit as usize)
         .collect::<Vec<_>>();
     Ok(StorageListInformation {
@@ -57,17 +133,7 @@ define_func!(storages_list(login_context, options: ListStorageOptions) -> Storag
     })
 });
 define_func!(storages_get(login_context, id: i64, _check: bool) -> StorageDetailsInformation = {
-    let storage = STORAGES.get(&id).ok_or(StorageNotFoundError)?.1.clone();
-    // TODO: mock more detail implement.
-    Ok(StorageDetailsInformation {
-        basic: storage,
-        size: Some(130),
-        indexed_size: 130,
-        total_size: None,
-        upload_flow: None,
-        download_flow: None,
-        max_size_per_file: 100 << 20,
-    })
+    get_detail_information(id).await
 });
 define_func!(storages_remove(login_context, id: i64) -> () = {
     STORAGES.remove(&id).ok_or(StorageNotFoundError)?;
@@ -119,7 +185,7 @@ define_func!(storages_lanzou_add(login_context, name: String, config: LanzouConf
     config.check()?;
     if name.len() < 1 { return Err(IncorrectArgumentError::new("storage name is empty".into()).into()); }
     if name.len() > 32767 { return Err(IncorrectArgumentError::new("storage name is too long".into()).into()); }
-    let id = ATOMIC_ID.fetch_add(1, Ordering::SeqCst);
+    let id = ATOMIC_ID.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
     let info = StorageInformation {
         id, name: Arc::new(name),
         read_only: false,
