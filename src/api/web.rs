@@ -18,6 +18,7 @@ pub mod register {
     /// Register as guest, returns user_id.
     ///
     /// device_id: 16 <= len <= 256
+    ///
     /// password: 6 <= len <= 128
     pub async fn register_as_guest(device_id: String, password: String) -> Result<Option<String>, UniverseError> {
         wlist_native::web::register::as_guest::register_as_guest(device_id, password).await.map_err(Into::into)
@@ -38,11 +39,15 @@ pub mod user {
     }
 
     /// Set the nickname of the current user.
+    ///
+    /// nickname: 1 <= len <= 128
     pub async fn set_nickname(nickname: String) -> Result<(), UniverseError> {
         wlist_native::web::user::nickname::set_nickname(nickname).await.map_err(Into::into)
     }
 
     /// Reset the password of the current user.
+    ///
+    /// new: 6 <= len <= 128
     pub async fn reset_password(old: String, new: String) -> Result<(), UniverseError> {
         wlist_native::web::user::password::reset_password(old, new).await.map_err(Into::into)
     }
