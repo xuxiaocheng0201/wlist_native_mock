@@ -760,9 +760,9 @@ checksum = "d8adc4bb1803a324070e64a98ae98f38934d91957a99cfb3a43dcbc01bc56439"
 
 [[package]]
 name = "libsimple"
-version = "0.3.2"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12900b6fb4003950d7eadf2865bbc0d18be3c3224964dd982215dd35cc7a7c69"
+checksum = "c4b80765e3d2683e64c039b5783725368c0e3138dcc5a26617a3c62dc187344c"
 dependencies = [
  "better_embedded",
  "cc",
