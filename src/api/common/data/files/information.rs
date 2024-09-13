@@ -24,7 +24,7 @@ pub struct FFileInformation {
     pub update_time: Option<chrono::DateTime<chrono::Utc>>,
 }
 
-#[flutter_rust_bridge::frb(mirror(FileDetailsInformation), non_opaque)]
+#[flutter_rust_bridge::frb(non_opaque)]
 /// The detail information of a file/directory.
 #[derive(o2o::o2o)]
 #[map_owned(wlist_native::common::data::files::information::FileDetailsInformation)]
@@ -119,7 +119,7 @@ pub struct FUploadInformation {
 }
 
 
-#[flutter_rust_bridge::frb(mirror(ShareInformation), non_opaque)]
+#[flutter_rust_bridge::frb(non_opaque)]
 /// The shared information of the files/directories.
 #[derive(o2o::o2o)]
 #[map_owned(wlist_native::common::data::files::information::ShareInformation)]
