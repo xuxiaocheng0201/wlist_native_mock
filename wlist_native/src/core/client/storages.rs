@@ -208,6 +208,6 @@ define_func!(storages_lanzou_update(login_context, id: i64, config: LanzouConfig
     storage.0 = config;
     Ok(())
 });
-define_func!(storages_lanzou_chcek(_context, config: LanzouConfigurationInner) -> () = {
+define_func!(storages_lanzou_check(_context, config: LanzouConfigurationInner) -> () = {
     config.check().map_err(Into::into)
 });

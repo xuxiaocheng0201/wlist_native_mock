@@ -83,5 +83,5 @@ define_func!(
     ///
     /// Notice that this method won't check whether the account is correct/available (won't log in).
     /// May returns [InvalidStorageConfigError](crate::api::common::exceptions::UniverseError::InvalidStorageConfigError).
-    storages_lanzou_chcek(config: FLanzouConfiguration) -> () = wlist_native::core::client::storages::storages_lanzou_chcek
+    storages_lanzou_check(config: FLanzouConfiguration) -> () = wlist_native::core::client::storages::storages_lanzou_check
 );
