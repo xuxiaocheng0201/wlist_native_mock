@@ -16,12 +16,15 @@ define_func!(
     ///
     /// parent: .isDirectory == true
     ///
-    /// May returns [NameTooLongError], [InvalidFilenameError], [IllegalSuffixError] and [DuplicateFileError].
+    /// name: 0 < len < 32768
+    ///
+    /// May returns [NameTooLongError], [InvalidFilenameError], [IllegalSuffixError], [NestTooDeepError] and [DuplicateFileError].
     /// The [DuplicateFileError] is the last error to check.
     ///
     /// >[NameTooLongError]: crate::api::common::exceptions::UniverseError::NameTooLongError
     /// >[InvalidFilenameError]: crate::api::common::exceptions::UniverseError::InvalidFilenameError
     /// >[IllegalSuffixError]: crate::api::common::exceptions::UniverseError::IllegalSuffixError
+    /// >[NestTooDeepError]: crate::api::common::exceptions::UniverseError::NestTooDeepError
     /// >[DuplicateFileError]: crate::api::common::exceptions::UniverseError::DuplicateFileError
     upload_check_name(name: String, parent: FFileLocation, is_directory: bool) -> () = wlist_native::core::client::upload::upload_check_name
 );

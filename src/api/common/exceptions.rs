@@ -48,6 +48,7 @@ define_exception!(FReadOnlyStorageError ReadOnlyStorageError());
 define_exception!(FSpaceNotEnoughError SpaceNotEnoughError(left: Option<u64>, need: Option<u64>));
 define_exception!(FFlowNotEnoughError FlowNotEnoughError(#[doc = "true is upload, false is download"] upload: bool, left: Option<u64>, need: Option<u64>));
 define_exception!(FFileTooLargeError FileTooLargeError(size: u64, max: Option<u64>));
+define_exception!(FNestTooDeepError NestTooDeepError(max: Option<u64>));
 
 
 /// The universe error.
@@ -124,6 +125,8 @@ pub enum UniverseError {
     FlowNotEnoughError(FFlowNotEnoughError),
     /// The maximum single file size limit for the storage is exceeded.
     FileTooLargeError(FFileTooLargeError),
+    /// The nested hierarchy is too deep.
+    NestTooDeepError(FNestTooDeepError),
 
     // Other part
 
@@ -167,6 +170,7 @@ impl From<wlist_native::common::exceptions::UniverseError> for UniverseError {
             wlist_native::common::exceptions::UniverseError::SpaceNotEnoughError(f0, ) => UniverseError::SpaceNotEnoughError(f0.into()),
             wlist_native::common::exceptions::UniverseError::FlowNotEnoughError(f0, ) => UniverseError::FlowNotEnoughError(f0.into()),
             wlist_native::common::exceptions::UniverseError::FileTooLargeError(f0, ) => UniverseError::FileTooLargeError(f0.into()),
+            wlist_native::common::exceptions::UniverseError::NestTooDeepError(f0, ) => UniverseError::NestTooDeepError(f0.into()),
             wlist_native::common::exceptions::UniverseError::IO(_f0, f1, ) => UniverseError::IO(f1),
             wlist_native::common::exceptions::UniverseError::Network(f0, ) => UniverseError::Network(f0),
             wlist_native::common::exceptions::UniverseError::Other(f0, ) => UniverseError::Other(f0),

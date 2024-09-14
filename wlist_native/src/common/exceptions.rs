@@ -63,6 +63,7 @@ define_exception!(ReadOnlyStorageError() "readonly storage");
 define_exception!(SpaceNotEnoughError(left: Option<u64>, need: Option<u64>) |&e, f| write!(f, "space not enough: {:?} < {:?}", e.left, e.need));
 define_exception!(FlowNotEnoughError(upload: bool, left: Option<u64>, need: Option<u64>) |&e, f| write!(f, "{} flow not enough: {:?} < {:?}", if e.upload { "upload" } else { "download" }, e.left, e.need));
 define_exception!(FileTooLargeError(size: u64, max: Option<u64>) |&e, f| write!(f, "file too large: {} limit: {:?}", e.size, e.max));
+define_exception!(NestTooDeepError(max: Option<u64>) |&e, f| write!(f, "nest too deep. limit: {:?}", e.max));
 
 
 #[derive(Serialize, Deserialize)]
@@ -140,6 +141,7 @@ pub enum UniverseError {
     SpaceNotEnoughError(SpaceNotEnoughError),
     FlowNotEnoughError(FlowNotEnoughError),
     FileTooLargeError(FileTooLargeError),
+    NestTooDeepError(NestTooDeepError),
 
     Other(String),
 }
@@ -187,6 +189,7 @@ impl UniverseError {
         downcast!(error |e: SpaceNotEnoughError| Self::SpaceNotEnoughError(e));
         downcast!(error |e: FlowNotEnoughError| Self::FlowNotEnoughError(e));
         downcast!(error |e: FileTooLargeError| Self::FileTooLargeError(e));
+        downcast!(error |e: NestTooDeepError| Self::NestTooDeepError(e));
 
         Self::Other(format!("{error:#}"))
     }
@@ -223,6 +226,7 @@ impl UniverseError {
             UniverseError::SpaceNotEnoughError(error) => error.into(),
             UniverseError::FlowNotEnoughError(error) => error.into(),
             UniverseError::FileTooLargeError(error) => error.into(),
+            UniverseError::NestTooDeepError(error) => error.into(),
 
             UniverseError::Other(error) => anyhow!("{error}"),
         }
