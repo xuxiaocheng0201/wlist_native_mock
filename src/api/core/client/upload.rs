@@ -90,6 +90,9 @@ mod internal {
 ///
 /// The returned value is the total uploaded bytes of current buffer. (0 <= value < buffer_size)
 /// Returning null or error means the upload is finished.
+/// (then you should call [upload_finish] once if all chunks are uploaded)
+///
+/// If the returned value is null, the previous non-null value means the exact uploaded bytes from the buffer.
 pub async fn upload_stream(client: Option<WlistClientManager>, token: FUploadToken, id: u64, buffer: ConstU8, buffer_size: usize, transferred_bytes: StreamSink<Option<usize>>, control: PauseController) {
     let mut buffer = unsafe { wlist_native::core::helper::buffer::new_read_buffer(buffer.0, buffer_size) };
     let (tx, mut rx) = tokio::sync::watch::channel(0);
@@ -101,6 +104,7 @@ pub async fn upload_stream(client: Option<WlistClientManager>, token: FUploadTok
             }
         } } => unreachable!()
     };
+    let _ = transferred_bytes.add(Some(*rx.borrow_and_update())); // Final uploaded bytes.
     match r {
         Ok(()) => transferred_bytes.add(None),
         Err(error) => transferred_bytes.add_error(error),
@@ -174,7 +178,7 @@ pub fn drop_buffer_mapped(resource: MappedReadonlyBufferResource) -> Result<(), 
 /// Read the buffer.
 ///
 /// Same as [clone_buffer](crate::api::core::client::download::clone_buffer),
-/// but provide a `*const u8` version.
+/// but provide a [ConstU8] version.
 ///
 ///
 /// ptr: the pointer to the buffer.

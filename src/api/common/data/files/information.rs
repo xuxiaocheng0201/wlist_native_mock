@@ -73,6 +73,10 @@ pub struct FDownloadChunkInformation {
     /// The start byte index of the entire file.
     pub start: u64,
     /// This chunk size.
+    ///
+    /// If the file size is unknown and `range` is false,
+    /// this may be the `to - from + 1` parameter of [download_request](crate::api::core::client::download::download_request).
+    /// i.e. Maybe a too large number in this case.
     pub size: u64,
 }
 
@@ -85,7 +89,7 @@ pub struct FDownloadChunkInformation {
 /// i.e. `chunks[i].start + chunks[i].size == chunks[i + 1].start`
 ///
 /// But `chunks[0].start` may not be the `from` parameter of the download request.
-/// `chunks[-1].start + chunks[-1].size - 1` may not be the `to` parameter of the download request.
+/// `chunks[-1].start + chunks[-1].size - 1` may not be the `to` parameter of [download_request](crate::api::core::client::download::download_request).
 #[derive(o2o::o2o)]
 #[map_owned(wlist_native::common::data::files::information::DownloadInformation)]
 pub struct FDownloadInformation {
