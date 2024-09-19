@@ -85,6 +85,8 @@ mod internal {
 /// id: see the `chunks` field in [FUploadInformation]. (0 <= id < chunks_length)
 ///
 /// buffer: a pointer to the buffer to read the data.
+/// Notice this buffer doesn't need to be large enough to cover the entire chunk.
+/// Continuous calls on the same chunk will chain the buffer to the end.
 ///
 /// The returned value is the total uploaded bytes of current buffer. (0 <= value < buffer_size)
 /// Returning null or error means the upload is finished.

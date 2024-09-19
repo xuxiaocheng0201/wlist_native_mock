@@ -55,6 +55,11 @@ mod internal {
 /// id: see the `chunks` field in [FDownloadInformation]. (0 <= id < chunks_length)
 ///
 /// start: the start position to download of this chunk. (0 <= start <= chunk_size)
+/// If `chunk_range` is false, this should always be 0.
+/// Notice this buffer doesn't need to be large enough to cover the entire chunk.
+/// Continuous calls on the same chunk will download the rest data.
+/// But if `chunk_range` is true, each call will send a GET request to the file server.
+/// So don't call this function too frequently to avoid HTTP 429.
 ///
 /// buffer: a pointer to the buffer to write the data.
 ///

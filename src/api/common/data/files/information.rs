@@ -79,12 +79,18 @@ pub struct FDownloadChunkInformation {
 #[flutter_rust_bridge::frb(non_opaque)]
 /// The information of download chunks.
 ///
-/// Ensured that the chunk bounds won't overlap.
-/// And the chunks cover the entire file.
+/// Ensured that the chunk bounds won't overlap,
+/// and the chunks cover the entire file.
+/// All chunks are in order.
+/// i.e. `chunks[i].start + chunks[i].size == chunks[i + 1].start`
+///
+/// But `chunks[0].start` may not be the `from` parameter of the download request.
+/// `chunks[-1].start + chunks[-1].size - 1` may not be the `to` parameter of the download request.
 #[derive(o2o::o2o)]
 #[map_owned(wlist_native::common::data::files::information::DownloadInformation)]
 pub struct FDownloadInformation {
     /// The download chunks. **The chunk id is the index of the list.**
+    /// Each chunk can be uploaded separately and concurrently.
     #[map(o2o::map_vec(~))]
     pub chunks: Vec<FDownloadChunkInformation>,
     /// The expiry time.
@@ -112,6 +118,7 @@ pub struct FUploadChunkInformation {
 #[map_owned(wlist_native::common::data::files::information::UploadInformation)]
 pub struct FUploadInformation {
     /// The upload chunks. **The chunk id is the index of the list.**
+    /// Each chunk can be uploaded separately and concurrently.
     #[map(o2o::map_vec(~))]
     pub chunks: Vec<FUploadChunkInformation>,
     /// The expiry time.
