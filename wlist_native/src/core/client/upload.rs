@@ -68,7 +68,7 @@ define_func!(upload_request(login_context, parent: FileLocation, name: String, s
     })
 });
 define_func!(upload_cancel(login_context, token: UploadToken) -> () = {
-    UPLOAD_MAP.remove(token.token.as_str());
+    UPLOAD_MAP.remove(token.token.as_str()).ok_or(TokenExpiredError)?;
     Ok(())
 });
 define_func!(upload_confirm(login_context, token: UploadToken) -> UploadInformation = {
