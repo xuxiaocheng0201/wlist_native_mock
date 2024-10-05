@@ -25,8 +25,8 @@ anyhow = "^1.0"
 o2o = "~0.4"
 thiserror = "^1.0"
 chrono = "~0.4"
-indexmap = "^2.5"
-hashbrown = "~0.14"
+indexmap = "^2.6"
+hashbrown = "~0.15"
 # core
 either = "^1.13"
 tokio = { version = "^1.40", features = ["macros"] }
