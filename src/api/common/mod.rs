@@ -21,8 +21,11 @@ pub(in crate::api) mod o2o {
     use std::hash::Hash;
     use std::sync::Arc;
 
+    use flutter_rust_bridge::for_generated::RustAutoOpaqueInner;
     use indexmap::IndexMap;
     pub use o2o::o2o;
+
+    use crate::frb_generated::{MoiArcValue, RustAutoOpaque};
 
     #[inline]
     pub fn map<A, B>(a: A) -> B where A: Into<B> {
@@ -55,6 +58,15 @@ pub(in crate::api) mod o2o {
         a.map(|a| into_arc(a))
     }
 
+    #[inline]
+    pub fn from_opaque<A, B>(data: A) -> RustAutoOpaque<B> where A: Into<B>, RustAutoOpaqueInner<B>: MoiArcValue {
+        RustAutoOpaque::new(data.into())
+    }
+
+    #[inline]
+    pub fn into_opaque<A, B>(opaque: RustAutoOpaque<B>) -> A where B: Clone + Into<A>, RustAutoOpaqueInner<B>: MoiArcValue {
+        opaque.blocking_read().clone().into()
+    }
 
 
     #[inline]

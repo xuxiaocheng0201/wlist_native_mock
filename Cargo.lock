@@ -124,11 +124,12 @@ dependencies = [
 
 [[package]]
 name = "better_embedded"
-version = "0.1.1"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f347e79cb991cdc8f3780c9324858975d2a33c8a2797ed41bf6d822e7e508d1"
+checksum = "e28fd9c8a7f31a913128bee48a37e7abc57c37e71d27e8fb41f849cef36f143f"
 dependencies = [
- "bitflags",
+ "log",
+ "md-5",
 ]
 
 [[package]]
@@ -256,9 +257,9 @@ checksum = "428d9aa8fbc0670b7b8d6030a7fadd0f86151cae55e4dbbece15f3780a3dfaf3"
 
 [[package]]
 name = "cc"
-version = "1.1.26"
+version = "1.1.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c4cbd4ab9fef358caa9c599eae3105af638ead5fb47a718315d8e03c852b9f0d"
+checksum = "2e80e3b6a3ab07840e1cae9b0666a63970dc28e8ed5ffbcdacbfc760c281bfc1"
 dependencies = [
  "jobserver",
  "libc",
@@ -796,9 +797,9 @@ checksum = "561d97a539a36e26a9a5fad1ea11a3039a67714694aaa379433e580854bc3dc5"
 
 [[package]]
 name = "libsimple"
-version = "0.3.3"
+version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c4b80765e3d2683e64c039b5783725368c0e3138dcc5a26617a3c62dc187344c"
+checksum = "8f19c973685f7633509dfcb02baa580eaf955a58774c58d73539445a46edb70b"
 dependencies = [
  "better_embedded",
  "cc",
@@ -1091,9 +1092,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.86"
+version = "1.0.87"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5e719e8df665df0d1c8fbfd238015744736151d4445ec0836b8e628aae103b77"
+checksum = "b3e4daa0dcf6feba26f985457cdf104d4b4256fc5a09547140f3631bb076b19a"
 dependencies = [
  "unicode-ident",
 ]

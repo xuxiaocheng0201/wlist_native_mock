@@ -12,8 +12,8 @@ pub struct FRefreshConfirmation {
     /// The count of directories in the directory. (null means unknown.)
     pub directories: Option<u64>,
     /// The refresh token.
-    #[from(RustAutoOpaque::new(~.into()))]
-    #[into(~.blocking_read().clone().into())]
+    #[from(o2o::from_opaque(~))]
+    #[into(o2o::into_opaque(~))]
     pub token: RustAutoOpaque<FRefreshToken>,
 }
 
@@ -25,8 +25,8 @@ pub struct FDownloadConfirmation {
     /// The real total download size. (Associate with the `from`/`to` parameters in (download_request)[crate::api::core::client::download::download_request])
     pub size: u64,
     /// The download token.
-    #[from(RustAutoOpaque::new(~.into()))]
-    #[into(~.blocking_read().clone().into())]
+    #[from(o2o::from_opaque(~))]
+    #[into(o2o::into_opaque(~))]
     pub token: RustAutoOpaque<FDownloadToken>,
 }
 
@@ -38,7 +38,7 @@ pub struct FUploadConfirmation {
     /// Uf true, the file has been successfully uploaded. (Uploaded by Checksum.)
     pub done: bool,
     /// The upload token.
-    #[from(RustAutoOpaque::new(~.into()))]
-    #[into(~.blocking_read().clone().into())]
+    #[from(o2o::from_opaque(~))]
+    #[into(o2o::into_opaque(~))]
     pub token: RustAutoOpaque<FUploadToken>,
 }
