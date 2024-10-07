@@ -68,7 +68,7 @@ mod internal {
 /// (then you should call [download_finish] once if all chunks are downloaded)
 ///
 /// If the returned value is null, the previous non-null value means the exact downloaded bytes to the buffer.
-pub async fn download_stream(client: Option<WlistClientManager>, token: &FDownloadToken, id: u64, start: u64, buffer: MutU8, buffer_size: usize, transferred_bytes: StreamSink<Option<usize>>, control: PauseController) {
+pub async fn download_stream(client: Option<WlistClientManager>, token: &FDownloadToken, id: u64, start: u64, buffer: &MutU8, buffer_size: usize, transferred_bytes: StreamSink<Option<usize>>, control: PauseController) {
     let mut buffer = unsafe { wlist_native::core::helper::buffer::new_write_buffer(buffer.0, buffer_size) };
     let (tx, mut rx) = tokio::sync::watch::channel(0);
     let r = tokio::select! {
@@ -166,6 +166,6 @@ pub fn drop_buffer_mapped(resource: MappedBufferResource) -> Result<(), Universe
 /// ptr: the pointer to the buffer.
 ///
 /// len: the length of the buffer.
-pub fn clone_buffer(ptr: MutU8, len: usize) -> Vec<u8> {
+pub fn clone_buffer(ptr: &MutU8, len: usize) -> Vec<u8> {
     unsafe { std::slice::from_raw_parts_mut(ptr.0, len) }.to_vec()
 }
