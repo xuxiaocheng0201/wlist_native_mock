@@ -16,35 +16,35 @@ define_func!(
     /// Cancel a refresh.
     ///
     /// What ever the refresh is paused or not, or not confirmed, it will be canceled.
-    refresh_cancel(token: FRefreshToken) -> () = wlist_native::core::client::refresh::refresh_cancel
+    refresh_cancel(token: &FRefreshToken) -> () = wlist_native::core::client::refresh::refresh_cancel
 );
 define_func!(
     /// Confirm a refresh.
     ///
     /// Then the refresh is automatically resumed.
-    refresh_confirm(token: FRefreshToken) -> () = wlist_native::core::client::refresh::refresh_confirm
+    refresh_confirm(token: &FRefreshToken) -> () = wlist_native::core::client::refresh::refresh_confirm
 );
 define_func!(
     /// Pause a refresh.
     ///
     /// If refresh has been paused, the method will return normally.
-    refresh_pause(token: FRefreshToken) -> () = wlist_native::core::client::refresh::refresh_pause
+    refresh_pause(token: &FRefreshToken) -> () = wlist_native::core::client::refresh::refresh_pause
 );
 define_func!(
     /// Resume a refresh.
     ///
     /// If refresh has been resumed, the method will return normally.
-    refresh_resume(token: FRefreshToken) -> () = wlist_native::core::client::refresh::refresh_resume
+    refresh_resume(token: &FRefreshToken) -> () = wlist_native::core::client::refresh::refresh_resume
 );
 define_func!(
     /// Check whether a refresh is paused.
-    refresh_is_paused(token: FRefreshToken) -> bool = wlist_native::core::client::refresh::refresh_is_paused
+    refresh_is_paused(token: &FRefreshToken) -> bool = wlist_native::core::client::refresh::refresh_is_paused
 );
 define_func!(
     /// Get the progress of refresh.
     ///
     /// Notice that if the refresh is finished/canceled, it will return [TokenExpiredError](crate::api::common::exceptions::UniverseError::TokenExpiredError).
-    refresh_progress(token: FRefreshToken) -> FRefreshProgress = wlist_native::core::client::refresh::refresh_progress
+    refresh_progress(token: &FRefreshToken) -> FRefreshProgress = wlist_native::core::client::refresh::refresh_progress
 );
 define_func!(
     /// Check the refresh state.
@@ -56,5 +56,5 @@ define_func!(
     /// If the refresh progress returns any error, it will return the error (and the resources are released auto).
     /// If this method returned true (or returned the error above),
     /// the next time call will return [TokenExpiredError](crate::api::common::exceptions::UniverseError::TokenExpiredError).
-    refresh_check(token: FRefreshToken) -> bool = wlist_native::core::client::refresh::refresh_check
+    refresh_check(token: &FRefreshToken) -> bool = wlist_native::core::client::refresh::refresh_check
 );

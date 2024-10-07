@@ -25,19 +25,19 @@ define_func!(
     /// Cancel a download.
     ///
     /// What ever the download is paused or not, or not confirmed, it will be canceled.
-    download_cancel(token: FDownloadToken) -> () = wlist_native::core::client::download::download_cancel
+    download_cancel(token: &FDownloadToken) -> () = wlist_native::core::client::download::download_cancel
 );
 define_func!(
     /// Confirm a download.
     ///
     /// Then the download is automatically resumed.
-    download_confirm(token: FDownloadToken) -> FDownloadInformation = wlist_native::core::client::download::download_confirm
+    download_confirm(token: &FDownloadToken) -> FDownloadInformation = wlist_native::core::client::download::download_confirm
 );
 define_func!(
     /// Finish a download.
     ///
     /// This function is similar to call [download_cancel], but marks the download as finished.
-    download_finish(token: FDownloadToken) -> () = wlist_native::core::client::download::download_finish
+    download_finish(token: &FDownloadToken) -> () = wlist_native::core::client::download::download_finish
 );
 
 /// flutter_rust_bridge:ignore
@@ -46,7 +46,7 @@ mod internal {
     use tokio::sync::watch::{Receiver, Sender};
     use super::*;
 
-    define_func!(download_stream(token: FDownloadToken, id: u64, start: u64, buffer: &mut impl BufMut, transferred_bytes: Sender<usize>, control: Receiver<bool>) -> () = wlist_native::core::client::download::download_stream);
+    define_func!(download_stream(token: &FDownloadToken, id: u64, start: u64, buffer: &mut impl BufMut, transferred_bytes: Sender<usize>, control: Receiver<bool>) -> () = wlist_native::core::client::download::download_stream);
 }
 
 /// Download the file chunk.
@@ -68,7 +68,7 @@ mod internal {
 /// (then you should call [download_finish] once if all chunks are downloaded)
 ///
 /// If the returned value is null, the previous non-null value means the exact downloaded bytes to the buffer.
-pub async fn download_stream(client: Option<WlistClientManager>, token: FDownloadToken, id: u64, start: u64, buffer: MutU8, buffer_size: usize, transferred_bytes: StreamSink<Option<usize>>, control: PauseController) {
+pub async fn download_stream(client: Option<WlistClientManager>, token: &FDownloadToken, id: u64, start: u64, buffer: MutU8, buffer_size: usize, transferred_bytes: StreamSink<Option<usize>>, control: PauseController) {
     let mut buffer = unsafe { wlist_native::core::helper::buffer::new_write_buffer(buffer.0, buffer_size) };
     let (tx, mut rx) = tokio::sync::watch::channel(0);
     let r = tokio::select! {

@@ -21,11 +21,11 @@ define_func!(
     /// May returns [NameTooLongError], [InvalidFilenameError], [IllegalSuffixError], [NestTooDeepError] and [DuplicateFileError].
     /// The [DuplicateFileError] is the last error to check.
     ///
-    /// >[NameTooLongError]: crate::api::common::exceptions::UniverseError::NameTooLongError
-    /// >[InvalidFilenameError]: crate::api::common::exceptions::UniverseError::InvalidFilenameError
-    /// >[IllegalSuffixError]: crate::api::common::exceptions::UniverseError::IllegalSuffixError
-    /// >[NestTooDeepError]: crate::api::common::exceptions::UniverseError::NestTooDeepError
-    /// >[DuplicateFileError]: crate::api::common::exceptions::UniverseError::DuplicateFileError
+    /// >[NameTooLongError]: UniverseError::NameTooLongError
+    /// >[InvalidFilenameError]: UniverseError::InvalidFilenameError
+    /// >[IllegalSuffixError]: UniverseError::IllegalSuffixError
+    /// >[NestTooDeepError]: UniverseError::NestTooDeepError
+    /// >[DuplicateFileError]: UniverseError::DuplicateFileError
     upload_check_name(name: String, parent: FFileLocation, is_directory: bool) -> () = wlist_native::core::client::upload::upload_check_name
 );
 define_func!(
@@ -55,19 +55,19 @@ define_func!(
     /// Cancel an upload.
     ///
     /// What ever the upload is paused or not, or not confirmed, it will be canceled.
-    upload_cancel(token: FUploadToken) -> () = wlist_native::core::client::upload::upload_cancel
+    upload_cancel(token: &FUploadToken) -> () = wlist_native::core::client::upload::upload_cancel
 );
 define_func!(
     /// Confirm an upload.
     ///
     /// Then the upload is automatically resumed.
-    upload_confirm(token: FUploadToken) -> FUploadInformation = wlist_native::core::client::upload::upload_confirm
+    upload_confirm(token: &FUploadToken) -> FUploadInformation = wlist_native::core::client::upload::upload_confirm
 );
 define_func!(
     /// Finish an upload.
     ///
-    /// May return [UploadChunkIncompleteError](crate::api::common::exceptions::UniverseError::UploadChunkIncompleteError).
-    upload_finish(token: FUploadToken) -> FFileInformation = wlist_native::core::client::upload::upload_finish
+    /// May return [UploadChunkIncompleteError](UniverseError::UploadChunkIncompleteError).
+    upload_finish(token: &FUploadToken) -> FFileInformation = wlist_native::core::client::upload::upload_finish
 );
 
 /// flutter_rust_bridge:ignore
@@ -76,7 +76,7 @@ mod internal {
     use tokio::sync::watch::{Receiver, Sender};
     use super::*;
 
-    define_func!(upload_stream(token: FUploadToken, id: u64, buffer: &mut Bytes, transferred_bytes: Sender<usize>, control: Receiver<bool>) -> () = wlist_native::core::client::upload::upload_stream);
+    define_func!(upload_stream(token: &FUploadToken, id: u64, buffer: &mut Bytes, transferred_bytes: Sender<usize>, control: Receiver<bool>) -> () = wlist_native::core::client::upload::upload_stream);
 }
 
 /// Upload the file chunk.
@@ -93,7 +93,7 @@ mod internal {
 /// (then you should call [upload_finish] once if all chunks are uploaded)
 ///
 /// If the returned value is null, the previous non-null value means the exact uploaded bytes from the buffer.
-pub async fn upload_stream(client: Option<WlistClientManager>, token: FUploadToken, id: u64, buffer: ConstU8, buffer_size: usize, transferred_bytes: StreamSink<Option<usize>>, control: PauseController) {
+pub async fn upload_stream(client: Option<WlistClientManager>, token: &FUploadToken, id: u64, buffer: ConstU8, buffer_size: usize, transferred_bytes: StreamSink<Option<usize>>, control: PauseController) {
     let mut buffer = unsafe { wlist_native::core::helper::buffer::new_read_buffer(buffer.0, buffer_size) };
     let (tx, mut rx) = tokio::sync::watch::channel(0);
     let r = tokio::select! {
