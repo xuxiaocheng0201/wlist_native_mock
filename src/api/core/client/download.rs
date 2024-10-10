@@ -68,7 +68,7 @@ mod internal {
 /// (then you should call [download_finish] once if all chunks are downloaded)
 ///
 /// If the returned value is null, the previous non-null value means the exact downloaded bytes to the buffer.
-pub async fn download_stream(client: Option<WlistClientManager>, token: &FDownloadToken, id: u64, start: u64, buffer: &MutU8, buffer_size: usize, transferred_bytes: StreamSink<Option<usize>>, control: PauseController) {
+pub async fn download_stream(client: Option<WlistClientManager>, token: &FDownloadToken, id: u64, start: u64, buffer: &MutU8, buffer_size: usize, transferred_bytes: StreamSink<Option<usize>>, control: &PauseController) {
     let mut buffer = unsafe { wlist_native::core::helper::buffer::new_write_buffer(buffer.0, buffer_size) };
     let (tx, mut rx) = tokio::sync::watch::channel(0);
     let r = tokio::select! {
