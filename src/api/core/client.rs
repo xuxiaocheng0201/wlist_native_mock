@@ -32,8 +32,8 @@ impl WlistClientManager {
 macro_rules! define_func {
     ($(#[$doc: meta])* $func: ident($($para: ident: $ty: ty),*) -> $res: ty = $target: expr) => {
         $(#[$doc])*
-        pub async fn $func(client: Option<$crate::api::core::client::WlistClientManager>, $($para: $ty),*) -> Result<$res, $crate::api::common::exceptions::UniverseError> {
-            let mut client = match &client {
+        pub async fn $func(client: &Option<$crate::api::core::client::WlistClientManager>, $($para: $ty),*) -> Result<$res, $crate::api::common::exceptions::UniverseError> {
+            let mut client = match client {
                 None => None, Some(manager) => Some(manager.manager.get().await?)
             };
             $target(&mut client.as_mut(), $($para.into()),*).await.map(Into::into).map_err(Into::into)
