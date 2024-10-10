@@ -77,7 +77,6 @@ define_func!(download_stream(login_context, token: DownloadToken, id: u64, start
             }
         }
     }
-    let _ = transferred_bytes.send(len);
     Ok(())
 });
 define_func!(download_finish(login_context, token: DownloadToken) -> () = {

@@ -1,5 +1,5 @@
 use std::fs::File;
-
+use tokio::task::yield_now;
 use crate::api::common::data::files::confirmations::FUploadConfirmation;
 use crate::api::common::data::files::FFileLocation;
 use crate::api::common::data::files::information::{FFileInformation, FUploadInformation};
@@ -101,6 +101,8 @@ pub async fn upload_stream(client: &Option<WlistClientManager>, token: &FUploadT
         _ = async { loop {
             if rx.changed().await.is_ok() {
                 let _ = transferred_bytes.add(Some(*rx.borrow_and_update()));
+            } else {
+                yield_now().await;
             }
         } } => unreachable!()
     };
