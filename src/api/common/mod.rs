@@ -1,21 +1,6 @@
-use crate::api::common::exceptions::UniverseError;
-
 pub mod data;
 pub mod exceptions;
 pub mod versions;
-
-/// Initialize the core server.
-///
-/// Note that you **must** call this method before calling all the others.
-/// You should ensure these directories exist and have permissions to read/write them.
-///
-/// The path can be absolute or relative.
-/// data_directory contains the data files, such as the database.
-/// cache_directory contains the support files, such as the dynamic libs.
-pub fn initialize(data_directory: String, cache_directory: String) -> Result<(), UniverseError> {
-    wlist_native::common::workspace::initialize(data_directory, cache_directory).map_err(anyhow::Error::from)?;
-    wlist_native::common::database::initialize().map_err(Into::into)
-}
 
 pub(in crate::api) mod o2o {
     use std::hash::Hash;

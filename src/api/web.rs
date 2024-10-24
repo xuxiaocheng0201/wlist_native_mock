@@ -10,6 +10,11 @@ pub mod account {
     pub async fn logout() -> Result<(), UniverseError> {
         wlist_native::web::account::logout::logout().await.map_err(Into::into)
     }
+
+    /// Check is logged in to the web.
+    pub async fn is_logged() -> Result<bool, UniverseError> {
+        wlist_native::web::account::is_logged::is_logged().await.map_err(Into::into)
+    }
 }
 
 pub mod register {
