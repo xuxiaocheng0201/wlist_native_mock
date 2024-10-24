@@ -7,7 +7,7 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies.flutter_rust_bridge]
-version = "=2.5.0"
+version = "=2.5.1"
 default-features = false
 features = [
     "rust-async",
@@ -29,6 +29,6 @@ indexmap = "^2.6"
 hashbrown = "~0.15"
 # core
 either = "^1.13"
-tokio = { version = "^1.40", features = ["macros"] }
-bytes = "^1.7"
+tokio = { version = "^1.41", features = ["macros"] }
+bytes = "^1.8"
 memmap2 = "~0.9"
