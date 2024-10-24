@@ -27,3 +27,11 @@ pub mod logout {
         Ok(())
     }
 }
+
+pub mod is_logged {
+    use crate::web::LOGIN_STATUS;
+
+    pub async fn is_logged() -> anyhow::Result<bool> {
+        Ok(LOGIN_STATUS.read().await.is_some())
+    }
+}
