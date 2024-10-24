@@ -9,7 +9,7 @@ fn get_dict_path() -> Result<PathBuf, WorkspaceError> {
     Ok(get_cache_directory()?.join("simple"))
 }
 
-pub fn initialize() -> Result<()> {
+pub(crate) fn initialize() -> Result<()> {
     libsimple::release_dict(&get_dict_path()?)?;
     libsimple::enable_auto_extension()?;
     rusqlite_regex::enable_auto_extension()?;

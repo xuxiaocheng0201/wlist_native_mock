@@ -30,7 +30,7 @@ pub fn get_cache_directory() -> Result<PathBuf, WorkspaceError> {
     CACHE_DIRECTORY.read().unwrap().clone().ok_or(WorkspaceError::CacheNotSet)
 }
 
-pub fn initialize(data_directory: impl Into<PathBuf> + Debug, cache_directory: impl Into<PathBuf> + Debug) -> Result<()> {
+pub(crate) fn initialize(data_directory: impl Into<PathBuf> + Debug, cache_directory: impl Into<PathBuf> + Debug) -> Result<()> {
     let data_directory = data_directory.into().canonicalize()?;
     let cache_directory = cache_directory.into().canonicalize()?;
     if !data_directory.is_dir() { return Err(WorkspaceError::DataNotExist(data_directory).into()); }
