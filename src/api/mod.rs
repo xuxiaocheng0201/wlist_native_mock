@@ -13,5 +13,5 @@ pub mod core;
 /// data_directory contains the data files, such as the database.
 /// cache_directory contains the support files, such as the dynamic libs.
 pub async fn initialize(data_directory: String, cache_directory: String) -> Result<(), UniverseError> {
-    wlist_native::initialize(data_directory, cache_directory).await.map_err(Into::into)
+    wlist_native::common::initialize(data_directory, cache_directory).await.map_err(Into::into)
 }
