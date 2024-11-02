@@ -1,38 +1,3 @@
-pub(crate) mod utils {
-    use std::sync::Arc;
-
-    use dashmap::DashMap;
-    use rand::Rng;
-    use tokio::task::{spawn_blocking, JoinError};
-
-    pub fn generate_string(length: usize) -> String {
-        const ALL: &str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        let mut key = Vec::with_capacity(length);
-        let mut rand = rand::thread_rng();
-        for _ in 0..length {
-            key.push(ALL.as_bytes()[rand.gen_range(0..ALL.len())]);
-        }
-        unsafe { String::from_utf8_unchecked(key) }
-    }
-
-    #[allow(dead_code)] // TODO
-    pub async fn random_id_and_put<V: Send + Sync + 'static>(map: &'static DashMap<Arc<String>, V>, value: V) -> Result<Arc<String>, JoinError> {
-        spawn_blocking(move || random_id_and_put_sync(map, value)).await
-    }
-
-    #[allow(dead_code)]
-    pub fn random_id_and_put_sync<V>(map: &DashMap<Arc<String>, V>, value: V) -> Arc<String> {
-        loop {
-            let id = Arc::new(generate_string(32));
-            let entry = map.entry(id);
-            if let dashmap::Entry::Occupied(_) = &entry {
-                continue;
-            }
-            break Arc::clone(entry.insert(value).key())
-        }
-    }
-}
-
 pub mod hasher {
     use std::sync::Arc;
 
@@ -91,8 +56,8 @@ pub mod hasher {
 }
 
 pub mod buffer {
-    use bytes::{BufMut, Bytes};
     use bytes::buf::UninitSlice;
+    use bytes::{BufMut, Bytes};
 
     #[inline]
     pub unsafe fn new_read_buffer(ptr: *const u8, cap: usize) -> Bytes {

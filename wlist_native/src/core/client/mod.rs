@@ -1,3 +1,5 @@
+#![allow(unused_variables)]
+
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
@@ -5,39 +7,16 @@ use anyhow::Result;
 use tokio::net::ToSocketAddrs;
 
 mod context {
-    use std::ops::{Deref, DerefMut};
-    use std::sync::Arc;
-
     use anyhow::Result;
     use once_cell::sync::Lazy;
-    use tokio::sync::RwLock;
-
-    use crate::common::exceptions::TokenExpiredError;
 
     #[derive(Default, Clone)]
-    pub struct ClientContext(Arc<RwLock<ClientContextInner>>);
+    pub struct ClientContext(());
 
     impl ClientContext {
-        pub async fn read_inner(&self) -> impl Deref<Target = ClientContextInner> {
-            Arc::clone(&self.0).read_owned().await
-        }
-
-        pub async fn write_inner(&self) -> impl DerefMut<Target = ClientContextInner> {
-            Arc::clone(&self.0).write_owned().await
-        }
-
         pub async fn check_is_login(&self) -> Result<()> {
-            if self.read_inner().await.login_status.is_some() {
-                Ok(())
-            } else {
-                Err(TokenExpiredError.into())
-            }
+            unimplemented!()
         }
-    }
-
-    #[derive(Debug, Default)]
-    pub struct ClientContextInner {
-        pub login_status: Option<()>,
     }
 
     pub static NATIVE_CONTEXT: Lazy<ClientContext> = Lazy::new(|| ClientContext::default());
@@ -58,17 +37,13 @@ mod context {
     }
     pub(crate) use define_func;
 }
+
 pub mod users;
 pub mod storages;
-#[allow(unused_variables)] // TODO
 pub mod files;
-#[allow(unused_variables)] // TODO
 pub mod refresh;
-#[allow(unused_variables)] // TODO
 pub mod download;
-#[allow(unused_variables)] // TODO
 pub mod upload;
-#[allow(unused_variables)] // TODO
 pub mod trash;
 
 #[derive(Debug, Clone)]
