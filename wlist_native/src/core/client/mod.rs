@@ -45,6 +45,7 @@ pub mod refresh;
 pub mod download;
 pub mod upload;
 pub mod trash;
+pub mod search;
 
 #[derive(Debug, Clone)]
 pub struct WlistClientManager<A: ToSocketAddrs + Debug + Clone + Send + Sync> {

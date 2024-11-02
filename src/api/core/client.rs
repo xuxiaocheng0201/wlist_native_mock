@@ -9,6 +9,7 @@ pub mod refresh;
 pub mod download;
 pub mod upload;
 pub mod trash;
+pub mod search;
 
 #[flutter_rust_bridge::frb(opaque)]
 /// The core client manager.
