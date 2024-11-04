@@ -17,22 +17,6 @@ pub struct StorageInformation {
     pub root_directory_id: i64,
 }
 
-impl StorageInformation {
-    /// The default id is `-1`.
-    pub fn new(name: Arc<String>, storage_type: StorageType, root_directory_id: i64) -> Self {
-        Self {
-            id: -1,
-            name,
-            read_only: storage_type.is_share(),
-            storage_type,
-            available: true,
-            create_time: Utc::now(),
-            update_time: Utc::now(),
-            root_directory_id,
-        }
-    }
-}
-
 #[derive(Debug, Serialize, Deserialize, Clone, Eq, PartialEq, Hash)]
 pub struct StorageDetailsInformation {
     pub basic: StorageInformation,

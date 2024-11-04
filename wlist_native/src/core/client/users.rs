@@ -1,9 +1,4 @@
-use crate::core::client::context::define_func;
+use crate::core::client::define_func;
 
-define_func!(users_login(context, username: String, passport: String) -> () = {
-    unimplemented!()
-});
-
-define_func!(users_logout(context,) -> () = {
-    unimplemented!()
-});
+define_func!(users_login(username: String, passport: String) -> ());
+define_func!(users_logout() -> ());

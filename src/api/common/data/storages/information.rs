@@ -51,6 +51,14 @@ pub struct FStorageDetailsInformation {
     pub max_size_per_file: u64,
 }
 
+impl FStorageDetailsInformation {
+    #[flutter_rust_bridge::frb(sync, getter)]
+    /// The storage size not used. (null means unknown.)
+    pub fn spare_size(&self) -> Option<u64> {
+        Some(self.total_size? - self.size?)
+    }
+}
+
 #[flutter_rust_bridge::frb(non_opaque)]
 /// The information list of a storage list.
 #[derive(o2o::o2o)]

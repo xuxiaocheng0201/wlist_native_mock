@@ -28,7 +28,7 @@ define_exception!(FIncorrectArgumentError IncorrectArgumentError(#[map(o2o::map(
 define_exception!(FPasswordMismatchedError PasswordMismatchedError());
 define_exception!(FTokenExpiredError TokenExpiredError());
 
-define_exception!(FInvalidStorageConfigError InvalidStorageConfigError(#[doc = "The key is the name of the invalid field"] #[from(o2o::from_hash_brown(~))] #[into(o2o::into_hash_brown(~))] e: HashMap<String, String>));
+define_exception!(FInvalidStorageConfigError InvalidStorageConfigError(#[doc = "The key is the name of the invalid field"] #[from(o2o::from_hash_map(~))] #[into(o2o::into_hash_map(~))] e: HashMap<String, String>));
 define_exception!(FIncorrectStorageAccountError IncorrectStorageAccountError());
 define_exception!(FDuplicateStorageError DuplicateStorageError());
 define_exception!(FStorageNotFoundError StorageNotFoundError());
@@ -51,11 +51,11 @@ define_exception!(FFileTooLargeError FileTooLargeError(size: u64, max: Option<u6
 define_exception!(FNestTooDeepError NestTooDeepError(max: Option<u64>));
 
 
+#[flutter_rust_bridge::frb(non_opaque)]
 /// The universe error.
 ///
 /// Ensured all api can throw and only throw this error.
 /// This is the universe error of all errors.
-#[flutter_rust_bridge::frb(non_opaque)]
 pub enum UniverseError {
     // Api part
 

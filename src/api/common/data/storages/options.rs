@@ -13,8 +13,8 @@ use crate::api::common::o2o;
 ///
 /// | Storage Type |  Shared  | Private |
 /// | ------------ | -------- | ------- |
-/// |   Readonly   | always'1 | maybe'3 |
-/// |   Writable   |  never   | maybe'2 |
+/// |   Readonly   | always^1 | maybe^3 |
+/// |   Writable   |  never   | maybe^2 |
 #[derive(o2o::o2o)]
 #[map_owned(wlist_native::common::data::storages::options::StoragesFilter)]
 pub enum FStoragesFilter {

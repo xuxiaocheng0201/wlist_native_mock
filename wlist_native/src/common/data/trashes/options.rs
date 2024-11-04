@@ -1,13 +1,12 @@
 use std::sync::Arc;
 
-use derive_more::Display;
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
 use crate::common::data::Direction;
 use crate::common::data::files::options::{FilesFilter, SearchPattern};
 
-#[derive(Debug, Display, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum TrashesOrder {
     Id,
     Name,

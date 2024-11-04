@@ -8,5 +8,5 @@ pub enum VersionState {
 }
 
 pub async fn check_version() -> anyhow::Result<VersionState> {
-    Ok(VersionState::Latest)
+    unimplemented!()
 }

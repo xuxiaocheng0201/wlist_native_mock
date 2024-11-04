@@ -1,11 +1,10 @@
-use derive_more::Display;
 use serde::{Deserialize, Serialize};
 
 pub mod storages;
 pub mod files;
 pub mod trashes;
 
-#[derive(Debug, Display, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum Direction {
     ASCEND,
     DESCEND,

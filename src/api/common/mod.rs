@@ -2,6 +2,7 @@ pub mod data;
 pub mod exceptions;
 pub mod versions;
 
+#[allow(dead_code)]
 pub(in crate::api) mod o2o {
     use std::hash::Hash;
     use std::sync::Arc;
@@ -59,6 +60,15 @@ pub(in crate::api) mod o2o {
         vec.into_iter().map(|a| a.into()).collect()
     }
 
+    #[inline]
+    pub fn from_hash_set<A, T>(set: hashbrown::HashSet<T>) -> std::collections::HashSet<A> where T: Into<A>, A: Hash + Eq {
+        set.into_iter().map(Into::into).collect()
+    }
+
+    #[inline]
+    pub fn into_hash_set<T, A>(set: std::collections::HashSet<A>) -> hashbrown::HashSet<T> where A: Into<T>, T: Hash + Eq {
+        set.into_iter().map(Into::into).collect()
+    }
 
     #[inline]
     pub fn from_index_map<A, B, K, V>(map: IndexMap<K, V>) -> Vec<(A, B)> where K: Into<A>, V: Into<B>, K: Hash {
@@ -70,14 +80,13 @@ pub(in crate::api) mod o2o {
         vec.into_iter().map(|(k, v)| (k.into(), v.into())).collect()
     }
 
-
     #[inline]
-    pub fn from_hash_brown<A, B, K, V>(map: hashbrown::HashMap<K, V>) -> std::collections::HashMap<A, B> where K: Into<A>, V: Into<B>, A: Hash + Eq {
+    pub fn from_hash_map<A, B, K, V>(map: hashbrown::HashMap<K, V>) -> std::collections::HashMap<A, B> where K: Into<A>, V: Into<B>, A: Hash + Eq {
         map.into_iter().map(|(k, v)| (k.into(), v.into())).collect()
     }
 
     #[inline]
-    pub fn into_hash_brown<K, V, A, B>(map: std::collections::HashMap<A, B>) -> hashbrown::HashMap<K, V> where A: Into<K>, B: Into<V>, K: Hash + Eq {
+    pub fn into_hash_map<K, V, A, B>(map: std::collections::HashMap<A, B>) -> hashbrown::HashMap<K, V> where A: Into<K>, B: Into<V>, K: Hash + Eq {
         map.into_iter().map(|(k, v)| (k.into(), v.into())).collect()
     }
 }

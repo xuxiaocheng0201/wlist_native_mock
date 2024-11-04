@@ -4,21 +4,19 @@ use anyhow::Result;
 use tokio::net::ToSocketAddrs;
 
 #[derive(Debug)]
-pub struct WlistServer {
-    _private_construct: ()
-}
+pub struct WlistServer(());
 
 impl WlistServer {
     pub fn local_addr(&self) -> SocketAddr {
-        unimplemented!("WlistServer is not implemented in mock.")
+        unimplemented!()
     }
 
-    pub async fn start(_addr: impl ToSocketAddrs) -> Result<Self> {
-        Err(anyhow::anyhow!("WlistServer is not implemented in mock."))
+    pub async fn start(addr: impl ToSocketAddrs) -> Result<Self> {
+        unimplemented!()
     }
 
     pub async fn stop(self) -> Result<()> {
-        unimplemented!("WlistServer is not implemented in mock.")
+        unimplemented!()
     }
 }
 

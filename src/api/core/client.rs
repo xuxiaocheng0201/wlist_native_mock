@@ -15,7 +15,6 @@ pub mod search;
 /// The core client manager.
 ///
 /// For the `client` parameter: null is calling the internal core server directly.
-#[derive(Clone)]
 pub struct WlistClientManager {
     manager: wlist_native::core::client::WlistClientManager<String>,
 }

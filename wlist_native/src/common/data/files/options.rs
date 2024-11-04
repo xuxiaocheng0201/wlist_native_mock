@@ -1,19 +1,18 @@
 use std::sync::Arc;
 
-use derive_more::Display;
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
 use crate::common::data::Direction;
 
-#[derive(Debug, Display, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum FilesFilter {
     OnlyDirectories,
     OnlyFiles,
     Both,
 }
 
-#[derive(Debug, Display, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum FilesOrder {
     Id,
     Name,
@@ -32,7 +31,7 @@ pub struct ListFileOptions {
     pub limit: u32,
 }
 
-#[derive(Debug, Display, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum Duplicate {
     Error,
     Replace,
@@ -41,7 +40,7 @@ pub enum Duplicate {
 }
 
 
-#[derive(Debug, Display, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum SearchPattern {
     FullMatch,
     Regex,
