@@ -11,6 +11,9 @@ pub mod options;
 #[derive(Copy, Clone, o2o::o2o)]
 #[map_owned(StorageType)]
 pub enum FStorageType {
+    #[cfg(debug_assertions)]
+    /// Just for test and in memory. (No real storage.)
+    Mocker,
     /// [lanzou](https://up.woozooo.com/).
     Lanzou,
 
