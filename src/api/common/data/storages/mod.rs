@@ -11,9 +11,6 @@ pub mod options;
 #[derive(Copy, Clone, o2o::o2o)]
 #[map_owned(StorageType)]
 pub enum FStorageType {
-    #[cfg(debug_assertions)]
-    /// Just for test and in memory. (No real storage.)
-    Mocker,
     /// [lanzou](https://up.woozooo.com/).
     Lanzou,
 
@@ -37,7 +34,7 @@ impl FStorageType {
     /// Empty set means all suffixes are valid.
     ///
     /// See the source code in [check_filename](wlist_native::common::data::storages::StorageType::check_filename) for details and example.
-    pub fn allowed_suffixes(&self) -> std::collections::HashSet<&'static str> {
+    pub fn allowed_suffixes(&self) -> std::collections::HashSet<String> {
         o2o::from_hash_set(Into::<StorageType>::into(*self).allowed_suffixes().clone())
     }
 
@@ -46,7 +43,7 @@ impl FStorageType {
     /// Empty set means all suffixes are valid.
     ///
     /// See the source code in [check_filename](wlist_native::common::data::storages::StorageType::check_filename) for details and example.
-    pub fn disallowed_suffixes(&self) -> std::collections::HashSet<&'static str> {
+    pub fn disallowed_suffixes(&self) -> std::collections::HashSet<String> {
         o2o::from_hash_set(Into::<StorageType>::into(*self).disallowed_suffixes().clone())
     }
 

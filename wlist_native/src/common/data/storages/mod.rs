@@ -3,8 +3,6 @@ pub mod options;
 
 #[derive(Debug, serde::Serialize, serde::Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum StorageType {
-    #[cfg(debug_assertions)]
-    Mocker,
     Lanzou,
     // FIXME: More types...
 }
