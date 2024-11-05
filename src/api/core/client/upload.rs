@@ -117,7 +117,7 @@ pub async fn upload_stream(client: &Option<WlistClientManager>, token: &FUploadT
 #[flutter_rust_bridge::frb(opaque)]
 /// Native pointer of `*const u8`.
 #[derive(Copy, Clone)]
-pub struct ConstU8(*const u8);
+pub struct ConstU8(pub(crate) *const u8);
 
 unsafe impl Send for ConstU8 { }
 unsafe impl Sync for ConstU8 { }

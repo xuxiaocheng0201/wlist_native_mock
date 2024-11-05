@@ -92,7 +92,7 @@ pub async fn download_stream(client: &Option<WlistClientManager>, token: &FDownl
 #[flutter_rust_bridge::frb(opaque)]
 /// Native pointer of `*mut u8`.
 #[derive(Copy, Clone)]
-pub struct MutU8(*mut u8);
+pub struct MutU8(pub(crate) *mut u8);
 
 unsafe impl Send for MutU8 { }
 unsafe impl Sync for MutU8 { }
