@@ -8,15 +8,13 @@ pub mod hasher {
     use tokio::sync::Mutex;
     use tokio::task::spawn_blocking;
 
-    /// MD5
-    pub(crate) fn hex32(src: &[u8]) -> Result<String, Error> {
+    fn hex32(src: &[u8]) -> Result<String, Error> {
         let mut buffer = vec![0; 32];
         hex_encode(src, &mut buffer)?;
         Ok(unsafe { String::from_utf8_unchecked(buffer) })
     }
 
-    /// SHA256
-    pub(crate) fn hex64(src: &[u8]) -> Result<String, Error> {
+    fn hex64(src: &[u8]) -> Result<String, Error> {
         let mut buffer = vec![0; 64];
         hex_encode(src, &mut buffer)?;
         Ok(unsafe { String::from_utf8_unchecked(buffer) })
@@ -33,9 +31,8 @@ pub mod hasher {
                     Self { inner: Arc::new(Mutex::new($digest::Digest::new())), }
                 }
 
-                $vis async fn update(&self, data: &Bytes) {
-                    let mut inner = self.inner.clone().lock_owned().await;
-                    let data = data.clone();
+                $vis async fn update(&self, data: Bytes) {
+                    let mut inner = Arc::clone(&self.inner).lock_owned().await;
                     spawn_blocking(move || {
                         let inner: &mut $hasher = &mut *inner;
                         $digest::Digest::update(inner, data.as_ref());
@@ -50,7 +47,6 @@ pub mod hasher {
             }
         };
     }
-
     define_hasher!(pub Md5Hasher(Md5) md5 -> hex32 ? "md5");
     define_hasher!(pub Sha256Hasher(Sha256) sha2 -> hex64 ? "sha256");
 }

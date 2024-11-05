@@ -20,7 +20,7 @@ pub mod hasher {
                 /// This can be called multiple times.
                 pub async fn update(&self, data: &ConstU8, data_size: usize) {
                     let buffer = unsafe { wlist_native::core::helper::buffer::new_read_buffer(data.0, data_size) };
-                    self.hasher.update(&buffer).await;
+                    self.hasher.update(buffer).await;
                 }
 
                 /// Returns the hash as a lowercase hex string.
