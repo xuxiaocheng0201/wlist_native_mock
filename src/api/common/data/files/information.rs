@@ -53,10 +53,10 @@ pub struct FFileDetailsInformation {
 #[derive(o2o::o2o)]
 #[map_owned(wlist_native::common::data::files::information::FileListInformation)]
 pub struct FFileListInformation {
-    /// The total number of files/directories in the directory.
-    pub total: u64,
-    /// The number of files/directories after [filtering](crate::api::common::data::files::options::FFilesFilter).
-    pub filtered: u64,
+    /// The total number of files in the directory.
+    pub total_file: u64,
+    /// The total number of directories in the directory.
+    pub total_directory: u64,
     /// The information list.
     #[map(o2o::map_vec(~))]
     pub files: Vec<FFileInformation>,
