@@ -89,28 +89,26 @@ mod internal {
 /// Continuous calls on the same chunk will chain the buffer to the end.
 ///
 /// The returned value is the total uploaded bytes of current buffer. (0 <= value < buffer_size)
-/// Returning null or error means the upload is finished.
+/// Returning done or error means the upload is finished.
 /// (then you should call [upload_finish] once if all chunks are uploaded)
 ///
-/// If the returned value is null, the previous non-null value means the exact uploaded bytes from the buffer.
-pub async fn upload_stream(client: &Option<WlistClientManager>, token: &FUploadToken, id: u64, buffer: &ConstU8, buffer_size: usize, transferred_bytes: StreamSink<Option<usize>>, control: &PauseController) {
+/// The last returned value before done means the exact uploaded bytes from the buffer.
+pub async fn upload_stream(client: &Option<WlistClientManager>, token: &FUploadToken, id: u64, buffer: &ConstU8, buffer_size: usize, transferred_bytes: StreamSink<usize>, control: &PauseController) {
     let mut buffer = unsafe { wlist_native::core::helper::buffer::new_read_buffer(buffer.0, buffer_size) };
     let (tx, mut rx) = tokio::sync::watch::channel(0);
     let r = tokio::select! {
         r = internal::upload_stream(client, token, id, &mut buffer, tx, control.sender.subscribe()) => r,
         _ = async { loop {
             if rx.changed().await.is_ok() {
-                let _ = transferred_bytes.add(Some(*rx.borrow_and_update()));
-            } else {
-                yield_now().await;
+                let _ = transferred_bytes.add(*rx.borrow_and_update());
             }
+            yield_now().await;
         } } => unreachable!()
     };
-    let _ = transferred_bytes.add(Some(*rx.borrow_and_update())); // Final uploaded bytes.
-    match r {
-        Ok(()) => transferred_bytes.add(None),
-        Err(error) => transferred_bytes.add_error(error),
-    }.expect("failed to send result to flutter")
+    let _ = transferred_bytes.add(*rx.borrow_and_update()); // Final uploaded bytes.
+    if let Err(error) = r {
+        transferred_bytes.add_error(error).expect("failed to send error to flutter")
+    }
 }
 
 
