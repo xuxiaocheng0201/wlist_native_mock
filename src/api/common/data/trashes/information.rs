@@ -45,10 +45,10 @@ pub struct FTrashDetailsInformation {
 #[derive(o2o::o2o)]
 #[map_owned(wlist_native::common::data::trashes::information::TrashListInformation)]
 pub struct FTrashListInformation {
-    /// The total number of the trashed files/directories.
-    pub total: u64,
-    /// The number of files/directories after [filtering](crate::api::common::data::files::options::FFilesFilter).
-    pub filtered: u64,
+    /// The total number of trashed files.
+    pub total_file: u64,
+    /// The total number of trashed directories.
+    pub total_directory: u64,
     /// The information list.
     #[map(o2o::map_vec(~))]
     pub files: Vec<FTrashInformation>,

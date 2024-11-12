@@ -22,7 +22,7 @@ pub struct TrashDetailsInformation {
 
 #[derive(Debug, Serialize, Deserialize, Clone, Eq, PartialEq, Hash)]
 pub struct TrashListInformation {
-    pub total: u64,
-    pub filtered: u64,
+    pub total_file: u64,
+    pub total_directory: u64,
     pub files: Vec<TrashInformation>,
 }
