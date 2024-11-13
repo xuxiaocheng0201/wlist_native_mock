@@ -4,8 +4,8 @@ use crate::common::data::files::tokens::{DownloadToken, RefreshToken, UploadToke
 
 #[derive(Debug, Serialize, Deserialize, Clone, Eq, PartialEq, Hash)]
 pub struct RefreshConfirmation {
-    pub files: Option<u64>,
-    pub directories: Option<u64>,
+    pub files: u64,
+    pub directories: u64,
     pub token: RefreshToken,
 }
 

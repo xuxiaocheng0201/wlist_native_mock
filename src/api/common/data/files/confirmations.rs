@@ -7,10 +7,10 @@ use crate::frb_generated::RustAutoOpaque;
 #[derive(o2o::o2o)]
 #[map_owned(wlist_native::common::data::files::confirmations::RefreshConfirmation)]
 pub struct FRefreshConfirmation {
-    /// The count of files in the directory. (null means unknown.)
-    pub files: Option<u64>,
-    /// The count of directories in the directory. (null means unknown.)
-    pub directories: Option<u64>,
+    /// The count of files in the directory.
+    pub files: u64,
+    /// The count of directories in the directory.
+    pub directories: u64,
     /// The refresh token.
     #[from(o2o::from_opaque(~))]
     #[into(o2o::into_opaque(~))]
