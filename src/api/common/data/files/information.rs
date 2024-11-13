@@ -62,6 +62,14 @@ pub struct FFileListInformation {
     pub files: Vec<FFileInformation>,
 }
 
+impl FFileListInformation {
+    #[flutter_rust_bridge::frb(sync, getter)]
+    /// The total number of files/directories in the directory.
+    pub fn total(&self) -> u64 {
+        self.total_file + self.total_directory
+    }
+}
+
 
 #[flutter_rust_bridge::frb(non_opaque)]
 /// The information of each download chunk.

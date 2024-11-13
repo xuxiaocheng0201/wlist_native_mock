@@ -53,3 +53,11 @@ pub struct FTrashListInformation {
     #[map(o2o::map_vec(~))]
     pub files: Vec<FTrashInformation>,
 }
+
+impl FTrashListInformation {
+    #[flutter_rust_bridge::frb(sync, getter)]
+    /// The total number of files/directories.
+    pub fn total(&self) -> u64 {
+        self.total_file + self.total_directory
+    }
+}
