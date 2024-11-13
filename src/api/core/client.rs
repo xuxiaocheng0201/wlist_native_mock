@@ -44,6 +44,7 @@ use define_func;
 
 #[flutter_rust_bridge::frb(opaque)]
 /// The download/upload pause/resume controller.
+/// Notice that this is only designed for pausing in small interval (shorter than 5 seconds).
 ///
 /// A controller can be passed into many functions.
 #[derive(Clone)]

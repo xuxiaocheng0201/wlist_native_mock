@@ -26,6 +26,8 @@ define_func!(
 );
 define_func!(
     /// Pause a refresh.
+    /// Notice this is only designed for pausing the refresh in small interval (shorter than 5 seconds).
+    /// If you want to pause the refresh for a long time, you should call [refresh_cancel] instead.
     ///
     /// If refresh has been paused, the method will return normally.
     refresh_pause(token: &FRefreshToken) -> () = wlist_native::core::client::refresh::refresh_pause

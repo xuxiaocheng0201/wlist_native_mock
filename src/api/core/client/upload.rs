@@ -88,6 +88,9 @@ mod internal {
 /// Notice this buffer doesn't need to be large enough to cover the entire chunk.
 /// Continuous calls on the same chunk will chain the buffer to the end.
 ///
+/// control: This controller is only designed for pausing the upload in small interval (shorter than 5 seconds).
+/// If you want to pause the upload for a long time, you should call [upload_cancel] instead.
+///
 /// The returned value is the total uploaded bytes of current buffer. (0 <= value < buffer_size)
 /// Returning done or error means the upload is finished.
 /// (then you should call [upload_finish] once if all chunks are uploaded)

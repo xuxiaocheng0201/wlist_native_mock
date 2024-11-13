@@ -63,6 +63,9 @@ mod internal {
 ///
 /// buffer: a pointer to the buffer to write the data.
 ///
+/// control: This controller is only designed for pausing the download in small interval (shorter than 5 seconds).
+/// If you want to pause the download for a long time, you should call [download_cancel] instead.
+///
 /// The returned value is the total downloaded bytes of current buffer. (0 <= value < buffer_size)
 /// Returning done or error means the download is finished.
 /// (then you should call [download_finish] once if all chunks are downloaded)
