@@ -36,8 +36,10 @@ define_func!(
 define_func!(
     /// Get detail information of a file/directory.
     ///
+    /// simplify: True indicates not require `path` and `thumbnail`.
+    ///
     /// check: True indicates the server should recheck the information.
-    files_get(location: FFileLocation, check: bool) -> FFileDetailsInformation = wlist_native::core::client::files::files_get
+    files_get(location: FFileLocation, simplify: bool, check: bool) -> FFileDetailsInformation = wlist_native::core::client::files::files_get
 );
 
 define_func!(
