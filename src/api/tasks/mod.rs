@@ -1,3 +1,6 @@
+//! Represent tasks.
+//! Notice this module only provides a database layer.
+
 use crate::api::common::o2o;
 
 pub mod data;
