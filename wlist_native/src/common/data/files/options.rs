@@ -51,5 +51,5 @@ pub enum SearchPattern {
 pub struct SearchFilesOptions {
     pub keyword: Arc<String>,
     pub pattern: SearchPattern,
-    pub recursive: bool,
+    pub depth: u64,
 }

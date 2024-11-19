@@ -113,6 +113,7 @@ pub struct FSearchFilesOptions {
     /// The pattern to search.
     #[map(o2o::map(~))]
     pub pattern: FSearchPattern,
-    /// True means search in recursive directories.
-    pub recursive: bool,
+    /// The depth is the maximum recursive depth to search.
+    /// 0 means no limit. The files in the directory is depth 1.
+    pub depth: u64,
 }
