@@ -3,6 +3,7 @@ use crate::api::common::exceptions::UniverseError;
 pub mod common;
 pub mod web;
 pub mod core;
+pub mod tasks;
 
 /// Initialize the core server.
 ///

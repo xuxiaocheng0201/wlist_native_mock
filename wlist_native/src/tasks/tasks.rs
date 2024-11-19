@@ -23,5 +23,5 @@ pub struct RefreshTask {
     #[deref] #[deref_mut]
     pub base: TaskBase,
     pub storage: i64,
-    pub parent: i64,
+    pub directory: i64,
 }
