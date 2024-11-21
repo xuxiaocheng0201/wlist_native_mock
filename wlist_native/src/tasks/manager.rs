@@ -37,6 +37,6 @@ pub async fn tasks_delete_all(filter: TasksFilter, state_filter: TaskStateFilter
 }
 
 
-pub async fn tasks_select_refresh(storage: i64, directory: i64) -> Result<Vec<TaskBase>> {
+pub async fn tasks_select_refresh(storage: i64, directory: i64, state_filter: TaskStateFilter) -> Result<Vec<TaskBase>> {
     unimplemented!()
 }
