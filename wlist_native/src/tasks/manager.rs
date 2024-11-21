@@ -1,8 +1,8 @@
 use anyhow::Result;
 
 use crate::tasks::data::{TaskListInformation, TaskStateFilter, TasksFilter};
+use crate::tasks::tasks::{TaskBase, TaskState};
 use crate::tasks::Task;
-use crate::tasks::tasks::TaskState;
 
 pub async fn tasks_select(id: i64) -> Result<Option<Task>> {
     unimplemented!()
@@ -33,5 +33,10 @@ pub async fn tasks_delete(tasks: Vec<i64>) -> Result<()> {
 }
 
 pub async fn tasks_delete_all(filter: TasksFilter, state_filter: TaskStateFilter) -> Result<()> {
+    unimplemented!()
+}
+
+
+pub async fn tasks_select_refresh(storage: i64, directory: i64) -> Result<Vec<TaskBase>> {
     unimplemented!()
 }
