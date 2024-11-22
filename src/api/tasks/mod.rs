@@ -2,6 +2,7 @@
 //! Notice this module only provides a database layer.
 
 use crate::api::common::o2o;
+use crate::api::tasks::tasks::FTaskBase;
 
 pub mod data;
 pub mod tasks;
@@ -19,4 +20,15 @@ pub enum FTask {
     /// Represents a upload task.
     Upload(#[map(o2o::map(~))] tasks::FUploadTask),
 
+}
+
+impl FTask {
+    #[flutter_rust_bridge::frb(sync, getter)]
+    pub fn base(&self) -> &FTaskBase {
+        match self {
+            FTask::Refresh(task) => &task.base,
+            FTask::Download(task) => &task.base,
+            FTask::Upload(task) => &task.base,
+        }
+    }
 }
