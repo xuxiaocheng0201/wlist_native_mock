@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize, Clone, Eq, PartialEq, Hash)]
 pub enum TaskState {
     Running,
+    Pausing,
     Pending,
     Failed(String),
     Complete,
@@ -24,4 +25,25 @@ pub struct RefreshTask {
     pub base: TaskBase,
     pub storage: i64,
     pub directory: i64,
+}
+
+#[derive(Debug, Deref, DerefMut, Serialize, Deserialize, Clone, Eq, PartialEq, Hash)]
+pub struct DownloadTask {
+    #[deref] #[deref_mut]
+    pub base: TaskBase,
+    pub storage: i64,
+    pub file_id: i64,
+    pub is_directory: bool,
+    pub path: String,
+    // TODO
+}
+
+#[derive(Debug, Deref, DerefMut, Serialize, Deserialize, Clone, Eq, PartialEq, Hash)]
+pub struct UploadTask {
+    #[deref] #[deref_mut]
+    pub base: TaskBase,
+    pub storage: i64,
+    pub parent: i64,
+    pub path: String,
+    // TODO
 }

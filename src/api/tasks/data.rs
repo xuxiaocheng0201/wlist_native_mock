@@ -10,6 +10,10 @@ pub enum FTasksFilter {
     All,
     /// Only refresh tasks.
     Refresh,
+    /// Only download tasks.
+    Download,
+    /// Only upload tasks.
+    Upload,
 
 }
 
@@ -23,15 +27,17 @@ pub enum FTaskStateFilter {
     /// `state` == 0
     Running,
     /// `state` == 1
-    Pending,
+    Pausing,
     /// `state` == 2
-    Failed,
+    Pending,
     /// `state` == 3
+    Failed,
+    /// `state` == 4
     Complete,
 
-    /// `state` == 0 OR `state` == 1
+    /// `state` == 0 OR `state` == 1 OR `state` == 2
     Working,
-    /// `state` == 2 OR `state` == 3
+    /// `state` == 3 OR `state` == 4
     Finished,
 }
 
@@ -40,10 +46,12 @@ pub enum FTaskStateFilter {
 #[derive(o2o::o2o)]
 #[map_owned(wlist_native::tasks::data::TaskListInformation)]
 pub struct FTaskListInformation {
-    /// The total number of pending tasks after applying type filter.
-    pub total_pending: u64,
     /// The total number of running tasks after applying type filter.
     pub total_running: u64,
+    /// The total number of pausing tasks after applying type filter.
+    pub total_pausing: u64,
+    /// The total number of pending tasks after applying type filter.
+    pub total_pending: u64,
     /// The total number of complete tasks after applying type filter.
     pub total_complete: u64,
     /// The total number of failed tasks after applying type filter.

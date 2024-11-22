@@ -14,5 +14,9 @@ pub mod manager;
 pub enum FTask {
     /// Represents a refresh task.
     Refresh(#[map(o2o::map(~))] tasks::FRefreshTask),
+    /// Represents a download task.
+    Download(#[map(o2o::map(~))] tasks::FDownloadTask),
+    /// Represents a upload task.
+    Upload(#[map(o2o::map(~))] tasks::FUploadTask),
 
 }

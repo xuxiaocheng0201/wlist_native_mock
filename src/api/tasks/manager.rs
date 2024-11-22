@@ -1,7 +1,7 @@
 use crate::api::common::exceptions::UniverseError;
 use crate::api::common::o2o;
 use crate::api::tasks::data::{FTaskListInformation, FTaskStateFilter, FTasksFilter};
-use crate::api::tasks::tasks::{FTaskBase, FTaskState};
+use crate::api::tasks::tasks::FTaskState;
 use crate::api::tasks::FTask;
 
 /// Select task by id.
@@ -42,10 +42,4 @@ pub async fn tasks_delete(tasks: Vec<i64>) -> Result<(), UniverseError> {
 /// Delete all tasks.
 pub async fn tasks_delete_all(filter: FTasksFilter, state_filter: FTaskStateFilter) -> Result<(), UniverseError> {
     wlist_native::tasks::manager::tasks_delete_all(filter.into(), state_filter.into()).await.map_err(Into::into)
-}
-
-
-/// Select all same refresh tasks.
-pub async fn tasks_select_refresh(storage: i64, directory: i64, state_filter: FTaskStateFilter) -> Result<Vec<FTaskBase>, UniverseError> {
-    wlist_native::tasks::manager::tasks_select_refresh(storage, directory, state_filter.into()).await.map(o2o::map_vec).map_err(Into::into)
 }

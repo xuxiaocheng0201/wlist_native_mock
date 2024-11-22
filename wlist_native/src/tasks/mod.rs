@@ -5,5 +5,7 @@ pub mod manager;
 #[derive(Debug, serde::Serialize, serde::Deserialize, Clone, Eq, PartialEq, Hash)]
 pub enum Task {
     Refresh(tasks::RefreshTask),
+    Download(tasks::DownloadTask),
+    Upload(tasks::UploadTask),
 
 }

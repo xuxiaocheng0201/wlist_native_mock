@@ -7,6 +7,8 @@ use crate::api::common::o2o;
 pub enum FTaskState {
     /// Task is running.
     Running,
+    /// Task is paused.
+    Pausing,
     /// Task is pending.
     Pending,
     /// Task is failed.
@@ -43,4 +45,40 @@ pub struct FRefreshTask {
     pub storage: i64,
     /// The refresh directory.
     pub directory: i64,
+}
+
+#[flutter_rust_bridge::frb(non_opaque)]
+/// Represent a download task.
+#[derive(o2o::o2o)]
+#[map_owned(wlist_native::tasks::tasks::DownloadTask)]
+pub struct FDownloadTask {
+    /// The task base.
+    #[map(o2o::map(~))]
+    pub base: FTaskBase,
+    /// The download storage.
+    pub storage: i64,
+    /// The download file id.
+    pub file_id: i64,
+    /// The download directory or file.
+    pub is_directory: bool,
+    /// The save path.
+    pub path: String,
+    // TODO
+}
+
+#[flutter_rust_bridge::frb(non_opaque)]
+/// Represent a upload task.
+#[derive(o2o::o2o)]
+#[map_owned(wlist_native::tasks::tasks::UploadTask)]
+pub struct FUploadTask {
+    /// The task base.
+    #[map(o2o::map(~))]
+    pub base: FTaskBase,
+    /// The upload storage.
+    pub storage: i64,
+    /// The upload parent directory.
+    pub parent: i64,
+    /// The file path.
+    pub path: String,
+    // TODO
 }
