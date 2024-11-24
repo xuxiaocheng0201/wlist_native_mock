@@ -8,6 +8,7 @@ pub enum TaskState {
     Pausing,
     Pending,
     Failed(String),
+    Cancelled,
     Complete,
 }
 

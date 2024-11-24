@@ -18,6 +18,7 @@ pub enum TaskStateFilter {
     Pausing,
     Pending,
     Failed,
+    Cancelled,
     Complete,
 
     Working,
@@ -30,6 +31,7 @@ pub struct TaskListInformation {
     pub total_pausing: u64,
     pub total_pending: u64,
     pub total_complete: u64,
+    pub total_cancelled: u64,
     pub total_failed: u64,
     pub tasks: Vec<Task>,
 }

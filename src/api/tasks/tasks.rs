@@ -13,6 +13,8 @@ pub enum FTaskState {
     Pending,
     /// Task is failed.
     Failed(String),
+    /// Task is cancelled.
+    Cancelled,
     /// Task is completed.
     Complete,
 }
