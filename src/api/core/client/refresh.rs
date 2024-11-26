@@ -45,7 +45,7 @@ define_func!(
 define_func!(
     /// Get the progress of refresh.
     ///
-    /// Notice that if the refresh is finished/canceled, it will return [TokenExpiredError](crate::api::common::exceptions::UniverseError::TokenExpiredError).
+    /// Notice that if the refresh is finished/canceled/errored, it will return [TokenExpiredError](crate::api::common::exceptions::UniverseError::TokenExpiredError).
     refresh_progress(token: &FRefreshToken) -> FRefreshProgress = wlist_native::core::client::refresh::refresh_progress
 );
 define_func!(
