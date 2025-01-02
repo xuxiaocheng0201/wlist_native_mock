@@ -4,7 +4,8 @@ pub mod options;
 #[derive(Debug, serde::Serialize, serde::Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum StorageType {
     Lanzou,
-    // FIXME: More types...
+    Baidu,
+    Pan123,
 }
 
 impl StorageType {

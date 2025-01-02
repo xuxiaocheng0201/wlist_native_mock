@@ -13,6 +13,10 @@ pub mod options;
 pub enum FStorageType {
     /// [lanzou](https://up.woozooo.com/).
     Lanzou,
+    /// [baidu](https://pan.baidu.com/).
+    Baidu,
+    /// [123pan](https://www.123pan.com/).
+    Pan123,
 
 }
 

@@ -16,7 +16,7 @@ hashbrown = { version = "~0.15", features = ["serde"] }
 
 # core
 bytes = "^1.9"
-either = "^1.13"
+either = { version = "^1.13", features = ["serde"] }
 ## helper
 faster-hex = "~0.10"
 sha2 = "~0.10"
