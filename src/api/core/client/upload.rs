@@ -41,11 +41,21 @@ define_func!(
     upload_mkdir(parent: FFileLocation, name: String, duplicate: FDuplicate) -> FFileInformation = wlist_native::core::client::upload::upload_mkdir
 );
 
+/// This is a helper struct.
+/// The [upload_extra_md5s] result.
+pub struct UploadExtraMd5sSize(pub usize);
+
+impl From<Option<NonZeroUsize>> for UploadExtraMd5sSize {
+    fn from(value: Option<NonZeroUsize>) -> Self {
+        Self(value.map(NonZeroUsize::get).unwrap_or(0))
+    }
+}
+
 define_func!(
     /// Get the storage upload md5 slice size.
     ///
-    /// None means the storage not require extra md5s.
-    upload_extra_md5s(storage: i64) -> Option<NonZeroUsize> = wlist_native::core::client::upload::upload_extra_md5s
+    /// Zero means the storage not require extra md5s.
+    upload_extra_md5s(storage: i64) -> UploadExtraMd5sSize = wlist_native::core::client::upload::upload_extra_md5s
 );
 define_func!(
     /// Request to upload a new file.
