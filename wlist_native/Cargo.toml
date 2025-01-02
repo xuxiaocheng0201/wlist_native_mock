@@ -7,15 +7,15 @@ edition = "2021"
 # common
 anyhow = "^1.0"
 serde = { version = "^1.0", features = ["derive", "rc"] }
-tokio = { version = "^1.40", features = ["sync", "net", "rt-multi-thread", "macros"] }
+tokio = { version = "^1.42", features = ["sync", "net", "rt-multi-thread", "macros"] }
 ## data
 derive_more = { version = "^1.0", features = ["constructor", "display", "deref", "deref_mut"] }
 chrono = { version = "~0.4", features = ["serde"] }
-indexmap = { version = "^2.6", features = ["serde"] }
+indexmap = { version = "^2.7", features = ["serde"] }
 hashbrown = { version = "~0.15", features = ["serde"] }
 
 # core
-bytes = "^1.7"
+bytes = "^1.9"
 either = "^1.13"
 ## helper
 faster-hex = "~0.10"

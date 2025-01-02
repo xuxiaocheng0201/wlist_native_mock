@@ -1,5 +1,8 @@
 use std::fs::File;
+use std::num::NonZeroUsize;
+
 use tokio::task::yield_now;
+
 use crate::api::common::data::files::confirmations::FUploadConfirmation;
 use crate::api::common::data::files::FFileLocation;
 use crate::api::common::data::files::information::{FFileInformation, FUploadInformation};
@@ -39,6 +42,12 @@ define_func!(
 );
 
 define_func!(
+    /// Get the storage upload md5 slice size.
+    ///
+    /// None means the storage not require extra md5s.
+    upload_extra_md5s(storage: i64) -> Option<NonZeroUsize> = wlist_native::core::client::upload::upload_extra_md5s
+);
+define_func!(
     /// Request to upload a new file.
     ///
     ///
@@ -48,8 +57,8 @@ define_func!(
     ///
     /// md5: the hash md5 of the entire new file. (This should be a lowercase string with a length of 32.)
     ///
-    /// md5s: the md5 slice of each 4MB part of the new file.
-    upload_request(parent: FFileLocation, name: String, size: u64, md5: String, md5s: Vec<String>, duplicate: FDuplicate) -> FUploadConfirmation = wlist_native::core::client::upload::upload_request
+    /// md5s: the md5 slice of the new file. (The slice size is got from [upload_extra_md5s].)
+    upload_request(parent: FFileLocation, name: String, size: u64, md5: String, md5s: Option<Vec<String>>, duplicate: FDuplicate) -> FUploadConfirmation = wlist_native::core::client::upload::upload_request
 );
 define_func!(
     /// Cancel an upload.

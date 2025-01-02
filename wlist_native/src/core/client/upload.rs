@@ -1,3 +1,5 @@
+use std::num::NonZeroUsize;
+
 use bytes::Bytes;
 use tokio::sync::watch::{Receiver, Sender};
 
@@ -12,7 +14,8 @@ define_func!(upload_check_name(name: String, parent: FileLocation, is_directory:
 
 define_func!(upload_mkdir(parent: FileLocation, name: String, duplicate: Duplicate) -> FileInformation);
 
-define_func!(upload_request(parent: FileLocation, name: String, size: u64, md5: String, md5s: Vec<String>, duplicate: Duplicate) -> UploadConfirmation);
+define_func!(9(storage: i64) -> Option<NonZeroUsize>);
+define_func!(upload_request(parent: FileLocation, name: String, size: u64, md5: String, md5s: Option<Vec<String>>, duplicate: Duplicate) -> UploadConfirmation);
 define_func!(upload_cancel(token: UploadToken) -> ());
 define_func!(upload_confirm(token: UploadToken) -> UploadInformation);
 define_func!(upload_stream(token: UploadToken, id: u64, buffer: &mut Bytes, transferred_bytes: Sender<usize>, control: Receiver<bool>) -> ());
