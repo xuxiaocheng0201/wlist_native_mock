@@ -22,6 +22,8 @@ pub enum StoragesOrder {
     Readonly,
     Size,
     IndexedSize,
+    TrashSize,
+    TrashIndexedSize,
     TotalSize,
     SpareSize,
     CreateTime,

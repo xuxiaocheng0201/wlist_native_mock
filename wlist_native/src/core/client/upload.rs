@@ -14,7 +14,7 @@ define_func!(upload_check_name(name: String, parent: FileLocation, is_directory:
 
 define_func!(upload_mkdir(parent: FileLocation, name: String, duplicate: Duplicate) -> FileInformation);
 
-define_func!(9(storage: i64) -> Option<NonZeroUsize>);
+define_func!(upload_extra_md5s(storage: i64) -> Option<NonZeroUsize>);
 define_func!(upload_request(parent: FileLocation, name: String, size: u64, md5: String, md5s: Option<Vec<String>>, duplicate: Duplicate) -> UploadConfirmation);
 define_func!(upload_cancel(token: UploadToken) -> ());
 define_func!(upload_confirm(token: UploadToken) -> UploadInformation);

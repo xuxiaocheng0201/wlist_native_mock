@@ -51,6 +51,10 @@ pub enum FStoragesOrder {
     Size,
     /// Sort by the storage indexed size.
     IndexedSize,
+    /// Sort by the storage used size in trash. (unknown is ahead of known)
+    TrashSize,
+    /// Sort by the storage indexed size in trash.
+    TrashIndexedSize,
     /// Sort by the storage total size. (unknown is ahead of known)
     TotalSize,
     /// Sort by the storage spare size. (unknown is ahead of known)

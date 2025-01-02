@@ -22,6 +22,8 @@ pub struct StorageDetailsInformation {
     pub basic: StorageInformation,
     pub size: Option<u64>,
     pub indexed_size: u64,
+    pub trash_size: Option<u64>,
+    pub trash_indexed_size: u64,
     pub total_size: Option<u64>,
     pub upload_flow: Option<StorageFlow>, // None means unknown/infinity.
     pub download_flow: Option<StorageFlow>, // None means unknown/infinity.

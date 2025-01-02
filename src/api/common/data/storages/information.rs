@@ -39,6 +39,10 @@ pub struct FStorageDetailsInformation {
     pub size: Option<u64>,
     /// The storage size already indexed.
     pub indexed_size: u64,
+    /// The storage size in trash already used. (null means unknown.)
+    pub trash_size: Option<u64>,
+    /// The storage size in trash already indexed.
+    pub trash_indexed_size: u64,
     /// The storage total size, both used and not used. (null means unknown.)
     pub total_size: Option<u64>,
     /// The usage of upload flow. (null means unknown/infinity.)
