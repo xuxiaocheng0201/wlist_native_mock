@@ -198,7 +198,7 @@ pub struct FPan123Configuration {
     /// Login passport.
     #[map(~.into())]
     pub passport: FPan123ConfigurationPassport,
-    /// Login password. (6 <= len)
+    /// Login password. (6 <= len <= 16)
     #[from(o2o::from_arc(~))]
     #[into(o2o::into_arc(~))]
     pub password: String,
