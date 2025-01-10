@@ -28,7 +28,7 @@ indexmap = "^2.7"
 hashbrown = "~0.15"
 # core
 either = "^1.13"
-tokio = { version = "^1.42", features = ["macros"] }
+tokio = { version = "^1.43", features = ["macros"] }
 bytes = "^1.9"
 memmap2 = "~0.9"
 
