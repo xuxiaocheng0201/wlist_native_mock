@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::common::data::Language;
 
-pub async fn set_language(language: Language) -> Result<VersionState> {
+pub async fn set_language(language: Language) -> Result<()> {
     unimplemented!()
 }
 

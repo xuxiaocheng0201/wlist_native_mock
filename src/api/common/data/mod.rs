@@ -22,3 +22,26 @@ impl FDirection {
         Into::<Direction>::into(*self).revert().into()
     }
 }
+
+#[flutter_rust_bridge::frb(non_opaque)]
+/// The supported language.
+#[derive(Copy, Clone, o2o::o2o)]
+#[owned_into(wlist_native::common::data::Language)]
+#[non_exhaustive]
+pub enum FLanguage {
+    /// en-us
+    EnUs,
+    /// zh-cn
+    ZhCn,
+}
+
+// FIXME: https://github.com/Artem-Romanenia/o2o/issues/25
+impl From<wlist_native::common::data::Language> for FLanguage {
+    fn from(value: wlist_native::common::data::Language) -> FLanguage {
+        match value {
+            wlist_native::common::data::Language::EnUs => FLanguage::EnUs,
+            wlist_native::common::data::Language::ZhCn => FLanguage::ZhCn,
+            _ => unreachable!(),
+        }
+    }
+}

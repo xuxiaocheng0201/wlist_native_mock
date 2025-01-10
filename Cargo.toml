@@ -36,3 +36,6 @@ memmap2 = "~0.9"
 strip = true
 lto = true
 panic = "abort"
+
+[lints.rust]
+unexpected_cfgs = { level = "allow", check-cfg = ['cfg(frb_expand)'] }

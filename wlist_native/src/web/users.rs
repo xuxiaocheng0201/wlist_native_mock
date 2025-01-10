@@ -45,7 +45,7 @@ pub mod info {
 
     use crate::web::users::UserRole;
 
-    pub async fn get_user_info() -> anyhow::Result<Option<(String, UserRole)>> {
+    pub async fn get_user_info() -> anyhow::Result<(String, UserRole)> {
         unimplemented!()
     }
 
