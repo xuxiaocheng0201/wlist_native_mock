@@ -18,3 +18,10 @@ impl Direction {
         }
     }
 }
+
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, Hash)]
+#[non_exhaustive]
+pub enum Language {
+    EnUs,
+    ZhCn,
+}
