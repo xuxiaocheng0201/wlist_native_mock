@@ -162,6 +162,19 @@ define_func!(
     /// May returns [InvalidStorageConfigError](crate::api::common::exceptions::UniverseError::InvalidStorageConfigError).
     storages_baidu_check(config: FBaiduConfiguration) -> () = wlist_native::core::client::storages::storages_baidu_check
 );
+#[flutter_rust_bridge::frb(sync)]
+/// Visit this url to log in baidu and get the authorization code.
+/// When the url is started with [baidu_login_callback_url], the authorization process should be finished.
+pub fn baidu_login_url() -> String {
+    wlist_native::core::client::storages::baidu_login_url()
+}
+#[flutter_rust_bridge::frb(sync)]
+/// If the url is started with this, the authorization process should be finished.
+/// And the `code` url parameter is the authorization code.
+pub fn baidu_login_callback_url() -> String {
+    wlist_native::core::client::storages::baidu_login_callback_url()
+}
+
 
 #[flutter_rust_bridge::frb(non_opaque)]
 /// The type of `passport` in [FPan123Configuration] result.

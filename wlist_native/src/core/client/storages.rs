@@ -41,6 +41,12 @@ pub struct BaiduLoginTuple {
 define_func!(storages_baidu_add(name: String, config: BaiduConfigurationInner, token: Option<BaiduLoginTuple>) -> StorageInformation);
 define_func!(storages_baidu_update(id: i64, config: BaiduConfigurationInner) -> ());
 define_func!(storages_baidu_check(config: BaiduConfigurationInner) -> ());
+pub fn baidu_login_url() -> String {
+    unimplemented!()
+}
+pub fn baidu_login_callback_url() -> String {
+    unimplemented!()
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone, Eq, PartialEq)]
 pub struct Pan123ConfigurationInner {
