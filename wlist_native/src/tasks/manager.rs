@@ -20,10 +20,12 @@ pub async fn tasks_select_list(filter: TasksFilter, state_filter: TaskStateFilte
     unimplemented!()
 }
 
+#[deprecated]
 pub async fn tasks_insert(tasks: Vec<Task>) -> Result<Vec<Task>> {
     unimplemented!()
 }
 
+#[deprecated]
 pub async fn tasks_update(tasks: Vec<(i64, TaskState)>) -> Result<()> {
     unimplemented!()
 }

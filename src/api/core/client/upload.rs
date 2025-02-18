@@ -118,7 +118,7 @@ pub async fn upload_stream(client: &Option<WlistClientManager>, token: &FUploadT
     let (tx, mut rx) = tokio::sync::watch::channel(0);
     let r = tokio::select! {
         r = internal::upload_stream(client, token, id, &mut buffer, tx, control.sender.subscribe()) => r,
-        _ = async { loop {crate::utils::watch_to_stream(&mut rx, &transferred_bytes).await;} } => unreachable!()
+        _ = async { loop { crate::utils::watch_to_stream(&mut rx, &transferred_bytes).await;} } => unreachable!()
     };
     let _ = transferred_bytes.add(*rx.borrow_and_update()); // Final uploaded bytes.
     if let Err(error) = r {

@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use chrono::{DateTime, Utc};
 use derive_more::{Deref, DerefMut};
 use serde::{Deserialize, Serialize};
@@ -7,7 +9,7 @@ pub enum TaskState {
     Running,
     Pausing,
     Pending,
-    Failed(String),
+    Failed(Arc<String>),
     Cancelled,
     Complete,
 }

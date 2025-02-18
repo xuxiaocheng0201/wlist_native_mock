@@ -25,12 +25,16 @@ pub async fn tasks_select_list(filter: FTasksFilter, state_filter: FTaskStateFil
 }
 
 /// Insert tasks.
+#[deprecated]
 pub async fn tasks_insert(tasks: Vec<FTask>) -> Result<Vec<FTask>, UniverseError> {
+    #[allow(deprecated)]
     wlist_native::tasks::manager::tasks_insert(o2o::map_vec(tasks)).await.map(o2o::map_vec).map_err(Into::into)
 }
 
 /// Update tasks state.
+#[deprecated]
 pub async fn tasks_update(tasks: Vec<(i64, FTaskState)>) -> Result<(), UniverseError> {
+    #[allow(deprecated)]
     wlist_native::tasks::manager::tasks_update(tasks.into_iter().map(|(a, b)| (a, b.into())).collect()).await.map_err(Into::into)
 }
 

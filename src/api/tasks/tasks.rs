@@ -12,7 +12,11 @@ pub enum FTaskState {
     /// Task is pending.
     Pending,
     /// Task is failed.
-    Failed(String),
+    Failed(
+        #[from(o2o::from_arc(~))]
+        #[into(o2o::into_arc(~))]
+        String
+    ),
     /// Task is cancelled.
     Cancelled,
     /// Task is completed.
