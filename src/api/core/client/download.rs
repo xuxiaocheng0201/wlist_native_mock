@@ -1,5 +1,5 @@
 use std::fs::File;
-use tokio::task::yield_now;
+
 use crate::api::common::data::files::confirmations::FDownloadConfirmation;
 use crate::api::common::data::files::FFileLocation;
 use crate::api::common::data::files::information::FDownloadInformation;
@@ -76,12 +76,7 @@ pub async fn download_stream(client: &Option<WlistClientManager>, token: &FDownl
     let (tx, mut rx) = tokio::sync::watch::channel(0);
     let r = tokio::select! {
         r = internal::download_stream(client, token, id, start, &mut buffer, tx, control.sender.subscribe()) => r,
-        _ = async { loop {
-            if rx.changed().await.is_ok() {
-                let _ = transferred_bytes.add(*rx.borrow_and_update());
-            }
-            yield_now().await;
-        } } => unreachable!()
+        _ = async { loop {crate::utils::watch_to_stream(&mut rx, &transferred_bytes).await;} } => unreachable!()
     };
     let _ = transferred_bytes.add(*rx.borrow_and_update()); // Final downloaded bytes.
     if let Err(error) = r {
