@@ -1,6 +1,6 @@
 use crate::api::tasks::tasks::FTaskState;
 use crate::frb_generated::StreamSink;
-use crate::utils::broadcast_to_stream;
+use crate::utils::channel::broadcast_to_stream;
 
 pub mod refresh;
 

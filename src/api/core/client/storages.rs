@@ -5,8 +5,8 @@ use either::Either;
 
 use crate::api::common::data::storages::information::{FStorageDetailsInformation, FStorageInformation, FStorageListInformation};
 use crate::api::common::data::storages::options::FListStorageOptions;
-use crate::api::common::o2o;
 use crate::api::core::client::define_func;
+use crate::utils::o2o;
 
 define_func!(
     /// List the storages.

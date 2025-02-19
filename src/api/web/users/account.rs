@@ -1,6 +1,6 @@
 use crate::api::common::exceptions::UniverseError;
-use crate::api::common::o2o;
 use crate::api::web::users::FUser;
+use crate::utils::o2o;
 
 /// Check current is logged in. Return true if logged in.
 pub async fn is_logged_in() -> Result<bool, UniverseError> {

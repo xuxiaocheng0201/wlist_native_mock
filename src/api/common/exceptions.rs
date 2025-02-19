@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::api::common::data::files::FFileLocation;
-use crate::api::common::o2o;
+use crate::utils::o2o;
 
 macro_rules! define_exception {
     ($exception: ident $origin: ident()) => {

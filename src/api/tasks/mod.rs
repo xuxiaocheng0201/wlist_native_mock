@@ -1,4 +1,4 @@
-use crate::api::common::o2o;
+use crate::utils::o2o;
 
 pub mod data;
 pub mod tasks;

@@ -1,6 +1,5 @@
 use crate::api::common::exceptions::UniverseError;
-use crate::api::common::o2o;
-
+use crate::utils::convert_option_bool;
 /// Reset the password. (require login)
 /// If reset successfully, it will return true.
 ///
@@ -8,7 +7,7 @@ use crate::api::common::o2o;
 ///
 /// new: 6 <= len <= 128
 pub async fn reset_password(old: String, new: String) -> Result<bool, UniverseError> {
-    wlist_native::web::users::password::reset_password(old, new).await.map(o2o::convert_option_bool).map_err(Into::into)
+    wlist_native::web::users::password::reset_password(old, new).await.map(convert_option_bool).map_err(Into::into)
 }
 
 /// Try reset the password with mail. (require login)
@@ -25,5 +24,5 @@ pub async fn reset_password_with_mail_untrusted() -> Result<String, UniverseErro
 ///
 /// password: 6 <= len <= 128
 pub async fn reset_password_with_mail<'a>(ident: String, code: String, password: String) -> Result<bool, UniverseError> {
-    wlist_native::web::users::password::reset_password_with_mail(ident, code, password).await.map(o2o::convert_option_bool).map_err(Into::into)
+    wlist_native::web::users::password::reset_password_with_mail(ident, code, password).await.map(convert_option_bool).map_err(Into::into)
 }

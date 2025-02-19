@@ -1,10 +1,10 @@
 use crate::api::common::data::files::confirmations::FRefreshConfirmation;
-use crate::api::common::o2o;
 use crate::api::common::data::files::progresses::FRefreshProgress;
 use crate::api::common::exceptions::UniverseError;
 use crate::api::tasks::tasks::FRefreshTask;
 use crate::frb_generated::StreamSink;
-use crate::utils::watch_to_stream;
+use crate::utils::channel::watch_to_stream;
+use crate::utils::{convert_option_bool, o2o};
 
 #[flutter_rust_bridge::frb(non_opaque)]
 /// Represent the running refresh task progress.
@@ -25,7 +25,7 @@ pub enum FRefreshState {
 ///
 /// Return false means no more pending task.
 pub async fn run_pending_refresh() -> Result<bool, UniverseError> {
-    wlist_native::tasks::runner::refresh::run_pending_refresh().await.map(o2o::convert_option_bool).map_err(Into::into)
+    wlist_native::tasks::runner::refresh::run_pending_refresh().await.map(convert_option_bool).map_err(Into::into)
 }
 
 /// Register a refresh task progress listener.
@@ -49,7 +49,7 @@ pub async fn insert_refresh_task(task: FRefreshTask, confirmation: Option<FRefre
 /// Return false if the task is not a [Running](crate::api::tasks::tasks::FTaskState::Running)
 /// or [Pending](crate::api::tasks::tasks::FTaskState::Pending) refresh task.
 pub async fn pause_refresh_task(id: i64) -> Result<bool, UniverseError> {
-    wlist_native::tasks::runner::refresh::pause_refresh_task(id).await.map(o2o::convert_option_bool).map_err(Into::into)
+    wlist_native::tasks::runner::refresh::pause_refresh_task(id).await.map(convert_option_bool).map_err(Into::into)
 }
 
 /// Resume a refresh task.
@@ -57,7 +57,7 @@ pub async fn pause_refresh_task(id: i64) -> Result<bool, UniverseError> {
 /// Return false if the task is not a [Running](crate::api::tasks::tasks::FTaskState::Running)
 /// or [Pausing](crate::api::tasks::tasks::FTaskState::Pausing) refresh task.
 pub async fn resume_refresh_task(id: i64) -> Result<bool, UniverseError> {
-    wlist_native::tasks::runner::refresh::resume_refresh_task(id).await.map(o2o::convert_option_bool).map_err(Into::into)
+    wlist_native::tasks::runner::refresh::resume_refresh_task(id).await.map(convert_option_bool).map_err(Into::into)
 }
 
 /// Cancel a refresh task.
@@ -66,5 +66,5 @@ pub async fn resume_refresh_task(id: i64) -> Result<bool, UniverseError> {
 /// or [Pending](crate::api::tasks::tasks::FTaskState::Pending)
 /// or [Pausing](crate::api::tasks::tasks::FTaskState::Pausing) refresh task.
 pub async fn cancel_refresh_task(id: i64) -> Result<bool, UniverseError> {
-    wlist_native::tasks::runner::refresh::cancel_refresh_task(id).await.map(o2o::convert_option_bool).map_err(Into::into)
+    wlist_native::tasks::runner::refresh::cancel_refresh_task(id).await.map(convert_option_bool).map_err(Into::into)
 }

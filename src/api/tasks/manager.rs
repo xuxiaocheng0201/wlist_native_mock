@@ -1,8 +1,8 @@
 use crate::api::common::exceptions::UniverseError;
-use crate::api::common::o2o;
 use crate::api::tasks::data::{FTaskListInformation, FTaskStateFilter, FTasksFilter};
 use crate::api::tasks::tasks::{FTaskBase, FTaskState};
 use crate::api::tasks::FTask;
+use crate::utils::o2o;
 
 /// Select task by id.
 pub async fn tasks_select(id: i64) -> Result<Option<FTask>, UniverseError> {

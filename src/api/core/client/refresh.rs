@@ -1,7 +1,7 @@
 use crate::api::common::data::files::confirmations::FRefreshConfirmation;
-use crate::api::common::data::files::FFileLocation;
 use crate::api::common::data::files::progresses::FRefreshProgress;
 use crate::api::common::data::files::tokens::FRefreshToken;
+use crate::api::common::data::files::FFileLocation;
 use crate::api::core::client::define_func;
 
 define_func!(

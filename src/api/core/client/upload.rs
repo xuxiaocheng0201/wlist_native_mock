@@ -2,13 +2,14 @@ use std::fs::File;
 use std::num::NonZeroUsize;
 
 use crate::api::common::data::files::confirmations::FUploadConfirmation;
-use crate::api::common::data::files::FFileLocation;
 use crate::api::common::data::files::information::{FFileInformation, FUploadInformation};
 use crate::api::common::data::files::options::FDuplicate;
 use crate::api::common::data::files::tokens::FUploadToken;
+use crate::api::common::data::files::FFileLocation;
 use crate::api::common::exceptions::UniverseError;
 use crate::api::core::client::{define_func, PauseController, WlistClientManager};
 use crate::frb_generated::StreamSink;
+use crate::utils::channel::watch_to_stream;
 
 define_func!(
     /// Check whether the file/directory name is valid.
@@ -91,6 +92,7 @@ define_func!(
 mod internal {
     use bytes::Bytes;
     use tokio::sync::watch::{Receiver, Sender};
+
     use super::*;
 
     define_func!(upload_stream(token: &FUploadToken, id: u64, buffer: &mut Bytes, transferred_bytes: Sender<usize>, control: Receiver<bool>) -> () = wlist_native::core::client::upload::upload_stream);
@@ -119,7 +121,7 @@ pub async fn upload_stream(client: &Option<WlistClientManager>, token: &FUploadT
     let r = tokio::select! {
         r = internal::upload_stream(client, token, id, &mut buffer, tx, control.sender.subscribe()) => r,
         _ = async { loop {
-            if crate::utils::watch_to_stream(&mut rx, &transferred_bytes, std::convert::identity).await {
+            if watch_to_stream(&mut rx, &transferred_bytes, std::convert::identity).await {
                 std::future::pending().await
             }
         } } => unreachable!()

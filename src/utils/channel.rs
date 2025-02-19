@@ -1,4 +1,6 @@
-pub async fn watch_to_stream<A: Clone, B: crate::frb_generated::SseEncode>(rx: &mut tokio::sync::watch::Receiver<A>, stream: &crate::frb_generated::StreamSink<B>, mut func: impl FnMut(A) -> B) -> bool {
+use crate::frb_generated::{SseEncode, StreamSink};
+
+pub async fn watch_to_stream<A: Clone, B: SseEncode>(rx: &mut tokio::sync::watch::Receiver<A>, stream: &StreamSink<B>, mut func: impl FnMut(A) -> B) -> bool {
     if rx.changed().await.is_ok() {
         let item = rx.borrow_and_update().clone();
         let item = func(item);
@@ -10,7 +12,7 @@ pub async fn watch_to_stream<A: Clone, B: crate::frb_generated::SseEncode>(rx: &
     }
 }
 
-pub async fn broadcast_to_stream<A: Clone, B: crate::frb_generated::SseEncode>(rx: &mut tokio::sync::broadcast::Receiver<A>, stream: &crate::frb_generated::StreamSink<B>, mut func: impl FnMut(A) -> B) {
+pub async fn broadcast_to_stream<A: Clone, B: SseEncode>(rx: &mut tokio::sync::broadcast::Receiver<A>, stream: &StreamSink<B>, mut func: impl FnMut(A) -> B) {
     match rx.recv().await {
         Ok(item) => {
             let item = func(item);

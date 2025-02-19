@@ -4,9 +4,9 @@ use wlist_native::common::data::files::confirmations::RefreshConfirmation;
 use wlist_native::common::data::files::information::FileListInformation;
 
 use crate::api::common::data::files::confirmations::FRefreshConfirmation;
-use crate::api::common::data::files::FFileLocation;
 use crate::api::common::data::files::information::{FFileDetailsInformation, FFileInformation, FFileListInformation};
 use crate::api::common::data::files::options::{FDuplicate, FListFileOptions};
+use crate::api::common::data::files::FFileLocation;
 use crate::api::core::client::define_func;
 
 #[flutter_rust_bridge::frb(non_opaque)]

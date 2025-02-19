@@ -1,6 +1,6 @@
 use chrono::{DateTime, Utc};
 
-use crate::api::common::o2o;
+use crate::utils::o2o;
 
 pub mod register;
 pub mod account;

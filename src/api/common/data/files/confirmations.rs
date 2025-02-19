@@ -1,6 +1,6 @@
 use crate::api::common::data::files::tokens::{FDownloadToken, FRefreshToken, FUploadToken};
-use crate::api::common::o2o;
 use crate::frb_generated::RustAutoOpaque;
+use crate::utils::o2o;
 
 #[flutter_rust_bridge::frb(non_opaque)]
 /// The confirmation to refresh a directory.

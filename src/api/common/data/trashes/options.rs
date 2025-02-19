@@ -1,6 +1,6 @@
-use crate::api::common::data::FDirection;
 use crate::api::common::data::files::options::{FFilesFilter, FSearchPattern};
-use crate::api::common::o2o;
+use crate::api::common::data::FDirection;
+use crate::utils::o2o;
 
 #[flutter_rust_bridge::frb(non_opaque)]
 /// Sort the trashed file list.

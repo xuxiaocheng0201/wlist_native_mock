@@ -1,5 +1,5 @@
-use crate::api::common::o2o;
 use crate::api::common::data::files::confirmations::FDownloadConfirmation;
+use crate::utils::o2o;
 
 #[flutter_rust_bridge::frb(non_opaque)]
 /// The information of a file/directory.

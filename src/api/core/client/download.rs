@@ -1,12 +1,13 @@
 use std::fs::File;
 
 use crate::api::common::data::files::confirmations::FDownloadConfirmation;
-use crate::api::common::data::files::FFileLocation;
 use crate::api::common::data::files::information::FDownloadInformation;
 use crate::api::common::data::files::tokens::FDownloadToken;
+use crate::api::common::data::files::FFileLocation;
 use crate::api::common::exceptions::UniverseError;
 use crate::api::core::client::{define_func, PauseController, WlistClientManager};
 use crate::frb_generated::StreamSink;
+use crate::utils::channel::watch_to_stream;
 
 define_func!(
     /// Request to download the file.
@@ -44,6 +45,7 @@ define_func!(
 mod internal {
     use bytes::BufMut;
     use tokio::sync::watch::{Receiver, Sender};
+
     use super::*;
 
     define_func!(download_stream(token: &FDownloadToken, id: u64, start: u64, buffer: &mut impl BufMut, transferred_bytes: Sender<usize>, control: Receiver<bool>) -> () = wlist_native::core::client::download::download_stream);
@@ -77,7 +79,7 @@ pub async fn download_stream(client: &Option<WlistClientManager>, token: &FDownl
     let r = tokio::select! {
         r = internal::download_stream(client, token, id, start, &mut buffer, tx, control.sender.subscribe()) => r,
         _ = async { loop {
-            if crate::utils::watch_to_stream(&mut rx, &transferred_bytes, std::convert::identity).await {
+            if watch_to_stream(&mut rx, &transferred_bytes, std::convert::identity).await {
                 std::future::pending().await
             }
         } } => unreachable!()

@@ -1,7 +1,7 @@
 use wlist_native::common::data::storages::StorageType;
 
 use crate::api::common::exceptions::UniverseError;
-use crate::api::common::o2o;
+use crate::utils::o2o;
 
 pub mod information;
 pub mod options;
