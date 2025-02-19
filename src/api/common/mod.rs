@@ -89,4 +89,9 @@ pub(in crate::api) mod o2o {
     pub fn into_hash_map<K, V, A, B>(map: std::collections::HashMap<A, B>) -> hashbrown::HashMap<K, V> where A: Into<K>, B: Into<V>, K: Hash + Eq {
         map.into_iter().map(|(k, v)| (k.into(), v.into())).collect()
     }
+
+    #[inline]
+    pub fn convert_option_bool(o: Option<()>) -> bool {
+        o.is_some()
+    }
 }

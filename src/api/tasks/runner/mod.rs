@@ -8,7 +8,7 @@ pub mod refresh;
 ///
 /// This function should only be called once.
 /// Ignore the null returned value.
-pub async fn get_change_receiver(stream: StreamSink<Option<(i64, FTaskState)>>) -> ! {
+pub async fn get_change_receiver(stream: StreamSink<Option<(i64, FTaskState)>>) {
     let mut receiver = wlist_native::tasks::runner::get_change_receiver();
     loop {
         broadcast_to_stream(&mut receiver, &stream, |a| a.map(|(id, state)| (id, state.into()))).await;
@@ -19,7 +19,7 @@ pub async fn get_change_receiver(stream: StreamSink<Option<(i64, FTaskState)>>) 
 ///
 /// Since [run_pending_refresh](refresh::run_pending_refresh) returned null means no more tasks,
 /// after this function returned a new value, a new pending refresh is ready.
-pub async fn get_refresh_listener(stream: StreamSink<()>) -> ! {
+pub async fn get_refresh_listener(stream: StreamSink<()>) {
     let mut receiver = wlist_native::tasks::runner::get_refresh_listener();
     loop {
         broadcast_to_stream(&mut receiver, &stream, std::convert::identity).await;
