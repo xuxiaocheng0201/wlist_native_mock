@@ -22,6 +22,12 @@ pub struct TaskBase {
     pub origin: Option<i64>,
 }
 
+impl TaskBase {
+    pub fn new(origin: Option<i64>) -> Self {
+        unimplemented!()
+    }
+}
+
 #[derive(Debug, Deref, DerefMut, Serialize, Deserialize, Clone, Eq, PartialEq, Hash)]
 pub struct RefreshTask {
     #[deref] #[deref_mut]

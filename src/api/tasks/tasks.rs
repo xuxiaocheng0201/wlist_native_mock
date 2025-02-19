@@ -39,6 +39,12 @@ pub struct FTaskBase {
     pub origin: Option<i64>,
 }
 
+impl FTaskBase {
+    pub fn new(origin: Option<i64>) -> Self {
+        wlist_native::tasks::tasks::TaskBase::new(origin).into()
+    }
+}
+
 #[flutter_rust_bridge::frb(non_opaque)]
 /// Represent a refresh task.
 #[derive(o2o::o2o)]

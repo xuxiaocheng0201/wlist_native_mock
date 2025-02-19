@@ -1,10 +1,12 @@
-pub async fn watch_to_stream<A: Clone + crate::frb_generated::SseEncode>(rx: &mut tokio::sync::watch::Receiver<A>, stream: &crate::frb_generated::StreamSink<A>) {
+pub async fn watch_to_stream<A: Clone, B: crate::frb_generated::SseEncode>(rx: &mut tokio::sync::watch::Receiver<A>, stream: &crate::frb_generated::StreamSink<B>, mut func: impl FnMut(A) -> B) -> bool {
     if rx.changed().await.is_ok() {
         let item = rx.borrow_and_update().clone();
+        let item = func(item);
         stream.add(item).expect("failed to send item to dart");
         tokio::task::yield_now().await;
+        false
     } else {
-        std::future::pending().await
+        true
     }
 }
 

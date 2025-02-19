@@ -33,9 +33,9 @@ pub async fn tasks_insert(tasks: Vec<FTask>) -> Result<Vec<FTask>, UniverseError
 
 /// Update tasks state.
 #[deprecated]
-pub async fn tasks_update(tasks: Vec<(i64, FTaskState)>) -> Result<(), UniverseError> {
+pub async fn tasks_update(task: i64, state: FTaskState) -> Result<(), UniverseError> {
     #[allow(deprecated)]
-    wlist_native::tasks::manager::tasks_update(tasks.into_iter().map(|(a, b)| (a, b.into())).collect()).await.map_err(Into::into)
+    wlist_native::tasks::manager::tasks_update(task, state.into()).await.map_err(Into::into)
 }
 
 /// Reset all tasks state from running to pending. Useful when initializing.

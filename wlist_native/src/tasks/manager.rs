@@ -26,7 +26,7 @@ pub async fn tasks_insert(tasks: Vec<Task>) -> Result<Vec<Task>> {
 }
 
 #[deprecated]
-pub async fn tasks_update(tasks: Vec<(i64, TaskState)>) -> Result<()> {
+pub async fn tasks_update(task: i64, state: TaskState) -> Result<()> {
     unimplemented!()
 }
 
